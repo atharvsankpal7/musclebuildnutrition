@@ -63,7 +63,7 @@ export async function DynamicFooter() {
             <div className="mb-6">
               <div className="w-72 h-auto mb-6">
                 <Image 
-                  src="/footer-logo.jpg" 
+                  src="/logos/footer-logo.jpg" 
                   width={400} 
                   height={150} 
                   alt="SS Creation Logo"

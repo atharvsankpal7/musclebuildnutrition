@@ -143,7 +143,7 @@ export function HeroSection() {
           >
             <div className="bg-white/70 backdrop-blur-md p-3 sm:p-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex flex-col items-center">
               <Image 
-                src="/psd.png" 
+                src="/logos/psd.png" 
                 alt="Photoshop PSD Format" 
                 width={60} 
                 height={60} 
@@ -153,7 +153,7 @@ export function HeroSection() {
                 </div>
             <div className="bg-white/70 backdrop-blur-md p-3 sm:p-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex flex-col items-center">
               <Image 
-                src="/cdr.png" 
+                src="/logos/cdr.png" 
                 alt="CorelDRAW CDR Format" 
                 width={60} 
                 height={60}

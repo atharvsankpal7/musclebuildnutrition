@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Toaster } from 'sonner';
 import { Providers } from '@/components/providers';
-import { SSRHeader } from '@/components/layout/ssr-header';
 import { DynamicFooter } from '@/components/layout/dynamic-footer';
 import { WhatsAppFloatWrapper } from '@/components/ui/whatsapp-float-wrapper';
 
@@ -134,9 +133,8 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Providers>
-          <SSRHeader />
           {children}
-          <DynamicFooter />
+        {/* <DynamicFooter /> */}
           <WhatsAppFloatWrapper />
         </Providers>
         <Toaster position="top-right" />

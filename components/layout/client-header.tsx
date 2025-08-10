@@ -113,7 +113,7 @@ export function ClientHeader({ navigationSections, headerData }: ClientHeaderPro
           <Link href="/" className="group flex items-center space-x-2">
             <div className="relative">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <Image src={"/header-logo.png"} width={80} height={80} alt='LOGO'/>
+                <Image src={"/logos/header-logo.png"} width={80} height={80} alt='LOGO'/>
               </div>
             </div>
             <span className="text-xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
