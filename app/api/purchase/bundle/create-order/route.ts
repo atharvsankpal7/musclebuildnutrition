@@ -2,10 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Order from '@/models/Order';
 import Bundle from '@/models/Bundle';
-import { razorpay } from '@/lib/razorpay';
+import { razorpay, isRazorpayConfigured } from '@/lib/razorpay';
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if Razorpay is configured
+    if (!isRazorpayConfigured()) {
+      return NextResponse.json({ 
+        error: 'Payment gateway not configured. Please contact support.' 
+      }, { status: 503 });
+    }
+
     await connectDB();
     
     const { email, bundleId } = await request.json();
@@ -34,7 +41,7 @@ export async function POST(request: NextRequest) {
     const amount = (bundle.discountPrice || bundle.originalPrice) * 100; // Convert to paisa
 
     // Create Razorpay order
-    const razorpayOrder = await razorpay.orders.create({
+    const razorpayOrder = await razorpay!.orders.create({
       amount,
       currency: 'INR',
       receipt: `bundle_order_${order._id}`,

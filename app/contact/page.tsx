@@ -102,7 +102,7 @@ export default async function Contact() {
               </Card>
 
               {/* Visit Card */}
-              <Card className="border-0 bg-white shadow-sm hover:shadow-md transition-all duration-300">
+              {/* <Card className="border-0 bg-white shadow-sm hover:shadow-md transition-all duration-300">
                 <CardContent className="p-8 text-center">
                   <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-amber-600">
                     <MapPin className="h-6 w-6" />
@@ -113,7 +113,7 @@ export default async function Contact() {
                     {contactSettings.address}
                   </address>
                 </CardContent>
-              </Card>
+              </Card> */}
             </div>
           </div>
         </section>

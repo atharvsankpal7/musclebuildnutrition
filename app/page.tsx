@@ -2,7 +2,6 @@
 import { Metadata } from 'next';
 import { NewHeaderServer } from '@/components/layout/new-header-server';
 import { HeroCarousel } from '@/components/home/hero-carousel';
-import { PromotionalBanners } from '@/components/home/promotional-banners';
 import { FitnessGoals } from '@/components/home/fitness-goals';
 import { HotDeals } from '@/components/home/hot-deals';
 import { LatestReviews } from '@/components/home/latest-reviews';
@@ -30,7 +29,6 @@ export default function Home() {
       <NewHeaderServer />
               <main>
                 <HeroCarousel />
-                <PromotionalBanners />
                 <FitnessGoals />
                 <HotDeals />
                 <LatestReviews />

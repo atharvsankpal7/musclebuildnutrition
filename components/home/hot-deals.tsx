@@ -18,8 +18,8 @@ interface HotDealProduct {
 const hotDealProducts: HotDealProduct[] = [
   {
     id: 1,
-    name: "Max Pump",
-    image: "/products/product1.webp",
+    name: "Musclebuild mass gainer",
+    image: "/products/Musclebuild mass gainer.jpg",
     originalPrice: 1299,
     discountedPrice: 909,
     discountPercentage: 30,
@@ -27,8 +27,8 @@ const hotDealProducts: HotDealProduct[] = [
   },
   {
     id: 2,
-    name: "Hardy Bull Ripped",
-    image: "/products/product2.webp",
+    name: "Musclebuild Pre workout",
+    image: "/products/Musclebuild Pre workout.jpg",
     originalPrice: 2499,
     discountedPrice: 1749,
     discountPercentage: 30,
@@ -36,8 +36,8 @@ const hotDealProducts: HotDealProduct[] = [
   },
   {
     id: 3,
-    name: "Performance Series Weight Gainer",
-    image: "/products/product3.webp",
+    name: "Musclebuild whey protein",
+    image: "/products/Musclebuild whey protein.jpg",
     originalPrice: 3599,
     discountedPrice: 3419,
     discountPercentage: 5,
@@ -45,8 +45,8 @@ const hotDealProducts: HotDealProduct[] = [
   },
   {
     id: 4,
-    name: "Pharma Grade BCAA",
-    image: "/products/product4.webp",
+    name: "Musclebuild mass gainer",
+    image: "/products/Musclebuild mass gainer back 2.jpg",
     originalPrice: 1999,
     discountedPrice: 1499,
     discountPercentage: 25,
@@ -54,12 +54,12 @@ const hotDealProducts: HotDealProduct[] = [
   },
   {
     id: 5,
-    name: "Taurine",
-    image: "/products/product5.webp",
-    originalPrice: 1299,
-    discountedPrice: 650,
-    discountPercentage: 50,
-    link: "/products/taurine"
+    name: "Musclebuild Pre workout",
+    image: "/products/Musclebuild Pre workout.jpg",
+    originalPrice: 2499,
+    discountedPrice: 1749,
+    discountPercentage: 30,
+    link: "/products/hardy-bull-ripped"
   }
 ];
 
@@ -78,7 +78,7 @@ export function HotDeals() {
             Hot Deals Of The Week
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Don't miss out on these incredible offers! Limited time deals on premium supplements.
+            Dont miss out on these incredible offers! Limited time deals on premium supplements.
           </p>
         </motion.div>
 

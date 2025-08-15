@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Mail, Leaf } from 'lucide-react';
+import Image from 'next/image';
+import { Mail, Leaf, Phone } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -12,23 +13,29 @@ export function Footer() {
           <div className="md:col-span-1">
             {/* Logo and Brand */}
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-lg font-bold">MT</span>
-              </div>
+              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-transparent">
+  <Image
+    src="/logos/logo white.jpg"
+    alt="TechVerse Logo"
+    width={40}
+    height={40}
+    className="rounded-full"
+  />
+</div>
               <div className="flex items-center gap-2">
-                <span className="text-red-600 text-lg font-bold">MUSCLETRAIL</span>
+                <span className="text-red-600 text-lg font-bold">Musclebuild Nutrition</span>
                 <Leaf className="w-4 h-4 text-red-600" />
               </div>
             </div>
-            
+
             <p className="text-gray-800 text-sm mb-4">KNOW BETTER, LIVE BETTER</p>
-            
+
             {/* Newsletter */}
             <div>
               <h3 className="text-gray-800 font-medium mb-2 text-sm">
                 Stay Updated With Our Newsletter
               </h3>
-              
+
               <div className="flex gap-2 mb-3">
                 <input
                   type="email"
@@ -61,10 +68,22 @@ export function Footer() {
               <li><Link href="#" className="hover:text-gray-800">Returns</Link></li>
               <li><Link href="#" className="hover:text-gray-800">Shipping Info</Link></li>
               <li><Link href="#" className="hover:text-gray-800">Help Center</Link></li>
+              <li className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-red-600" />
+                <a href="mailto:Musclebuildnutrition55@gmail.com" className="hover:text-gray-800">
+                  Musclebuildnutrition55@gmail.com
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Phone className="w-4 h-4 text-red-600" />
+                <a href="tel:9657866181" className="hover:text-gray-800">
+                  9657866181
+                </a>
+              </li>
             </ul>
           </div>
         </div>
-        
+
         {/* Bottom Line */}
         <div className="border-t border-gray-200 mt-6 pt-4 text-center">
           <p className="text-sm text-gray-500">

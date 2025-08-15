@@ -4,12 +4,12 @@ const ContactSettingsSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: true,
-    default: '+91 98765 43210'
+    default: '+91 9657866181'
   },
   email: {
     type: String,
     required: true,
-    default: 'hello@sscreation.com'
+    default: 'Musclebuildnutrition55@gmail.com'
   },
   address: {
     type: String,
@@ -32,7 +32,7 @@ const ContactSettingsSchema = new mongoose.Schema({
   whatsappNumber: {
     type: String,
     required: true,
-    default: '+919876543210'
+    default: '+919657866181'
   }
 }, {
   timestamps: true

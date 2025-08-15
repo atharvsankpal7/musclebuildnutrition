@@ -1,48 +1,52 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Order from '@/models/Order';
-import Product from '@/models/Product'; 
-import { sendProductFiles } from '@/lib/email';
+import { isRazorpayConfigured } from '@/lib/razorpay';
 import crypto from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
-    await connectDB();
+    // Check if Razorpay is configured
+    if (!isRazorpayConfigured()) {
+      return NextResponse.json({ 
+        error: 'Payment gateway not configured. Please contact support.' 
+      }, { status: 503 });
+    }
 
+    await connectDB();
+    
     const { orderId, paymentId, signature } = await request.json();
 
-    // Verify payment signature
+    if (!orderId || !paymentId || !signature) {
+      return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
+    }
+
+    // Verify signature
     const expectedSignature = crypto
       .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET!)
       .update(`${orderId}|${paymentId}`)
       .digest('hex');
 
     if (signature !== expectedSignature) {
-      return NextResponse.json({ error: 'Invalid payment signature' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
     }
-    const d = Product.findById(orderId);
 
-    // Register Product model via import (already done above)
+    // Find and update order
     const order = await Order.findOne({ razorpayOrderId: orderId }).populate('productId');
-
     if (!order) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
-    // Update order status to paid
-    order.status = 'paid';
+    order.status = 'completed';
     order.razorpayPaymentId = paymentId;
+    order.completedAt = new Date();
     await order.save();
 
-    // Send product files
-    const product = order.productId as any;
-    await sendProductFiles(order.email, product.title, product.productFiles);
-
-    // Update order status to delivered
-    order.status = 'delivered';
-    await order.save();
-
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Payment verified successfully',
+      orderId: order._id 
+    });
   } catch (error: any) {
     console.error('Error verifying payment:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

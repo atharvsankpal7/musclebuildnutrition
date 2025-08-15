@@ -16,7 +16,7 @@ interface Review {
 const reviews: Review[] = [
   {
     id: 1,
-    productImage: "/products/product1.webp",
+    productImage: "/products/Musclebuild mass gainer.jpg",
     title: "Good for Muscles",
     rating: 4.8,
     reviewText: "This product helps you in recover you muscles",
@@ -24,7 +24,7 @@ const reviews: Review[] = [
   },
   {
     id: 2,
-    productImage: "/products/product2.webp",
+    productImage: "/products/Musclebuild whey protein.jpg",
     title: "Best Product",
     rating: 4.6,
     reviewText: "I looking for a protein product which is easy to digest and it is very difficult for me to find. Can someone please suggest me?",
@@ -32,10 +32,10 @@ const reviews: Review[] = [
   },
   {
     id: 3,
-    productImage: "/products/product3.webp",
+    productImage: "/products/Musclebuild Pre workout.jpg",
     title: "Pro series Whey protien",
     rating: 4.6,
-    reviewText: "Taste mixability and quality are all excellent Whey protein is essential for a fitness freak especially if he or she is a strict vegetarian Muscletrail pro series whey protein meets my daily protein requirements with the highest quality",
+    reviewText: "Taste mixability and quality are all excellent Whey protein is essential for a fitness freak especially if he or she is a strict vegetarian Musclebuild Nutrition pro series whey protein meets my daily protein requirements with the highest quality",
     reviewerName: "Team Sparta"
   }
 ];
@@ -83,17 +83,16 @@ export function LatestReviews() {
                     <h3 className="font-semibold text-gray-900 text-lg mb-2 group-hover:text-red-600 transition-colors duration-300">
                       {review.title}
                     </h3>
-                    
+
                     {/* Star Rating */}
                     <div className="flex items-center space-x-1 mb-2">
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          className={`w-4 h-4 ${
-                            i < Math.floor(review.rating) 
-                              ? 'text-red-500 fill-current' 
+                          className={`w-4 h-4 ${i < Math.floor(review.rating)
+                              ? 'text-red-500 fill-current'
                               : 'text-gray-300'
-                          }`}
+                            }`}
                         />
                       ))}
                       <span className="ml-2 text-sm font-medium text-gray-600">
@@ -106,7 +105,7 @@ export function LatestReviews() {
                 {/* Review Text */}
                 <div className="mb-4">
                   <p className="text-gray-700 leading-relaxed text-sm">
-                    "{review.reviewText}"
+                    {review.reviewText}
                   </p>
                 </div>
 

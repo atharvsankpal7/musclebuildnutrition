@@ -142,7 +142,7 @@ export function ContactSettingsManager() {
                 id="phone"
                 value={settings.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
-                placeholder="+91 98765 43210"
+                placeholder="+91 9657866181"
               />
             </div>
             <div>
@@ -151,7 +151,7 @@ export function ContactSettingsManager() {
                 id="whatsappNumber"
                 value={settings.whatsappNumber}
                 onChange={(e) => handleInputChange('whatsappNumber', e.target.value)}
-                placeholder="+919876543210"
+                placeholder="+919657866181"
               />
               <p className="text-sm text-gray-500 mt-1">
                 Used for the floating WhatsApp button. Include country code without spaces.
@@ -164,17 +164,7 @@ export function ContactSettingsManager() {
                 type="email"
                 value={settings.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                placeholder="hello@sscreation.com"
-              />
-            </div>
-            <div>
-              <Label htmlFor="address">Address</Label>
-              <Textarea
-                id="address"
-                value={settings.address}
-                onChange={(e) => handleInputChange('address', e.target.value)}
-                placeholder="123 Design Street, Mumbai"
-                rows={3}
+                placeholder="Musclebuildnutrition55@gmail.com"
               />
             </div>
           </CardContent>

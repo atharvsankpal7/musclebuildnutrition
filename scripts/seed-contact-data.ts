@@ -12,8 +12,8 @@ async function seedContactData() {
     const existingSettings = await ContactSettings.findOne();
     if (!existingSettings) {
       await ContactSettings.create({
-        phone: '+91 98765 43210',
-        email: 'hello@sscreation.com',
+        phone: '+91 9657866181',
+        email: 'Musclebuildnutrition55@gmail.com',
         address: '123 Design Street, Mumbai',
         workingHours: {
           monday: '9:00 AM - 6:00 PM',
@@ -103,13 +103,13 @@ async function seedContactData() {
         { name: 'Products', url: '/products', category: 'quick-links', order: 2, isActive: true },
         { name: 'Bundles', url: '/bundles', category: 'quick-links', order: 3, isActive: true },
         { name: 'Contact', url: '/contact', category: 'quick-links', order: 4, isActive: true },
-        
+
         // Categories
         { name: 'Festival Designs', url: '/products?section=Festival Designs', category: 'categories', order: 0, isActive: true },
         { name: 'Design Bundles', url: '/bundles', category: 'categories', order: 1, isActive: true },
         { name: 'Business Cards', url: '/products?section=Business Templates', category: 'categories', order: 2, isActive: true },
         { name: 'Social Media', url: '/products?section=Social Media', category: 'categories', order: 3, isActive: true },
-        
+
         // Legal
         { name: 'Privacy Policy', url: '/privacy', category: 'legal', order: 0, isActive: true },
         { name: 'Terms of Service', url: '/terms', category: 'legal', order: 1, isActive: true },
