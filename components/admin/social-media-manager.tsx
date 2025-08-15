@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import type { DroppableProvided } from '@hello-pangea/dnd';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
@@ -207,93 +208,49 @@ export function SocialMediaManager() {
 
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="social-media">
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
-              {socialMedia.map((item, index) => {
-                const IconComponent = getIconComponent(item.icon);
-                return (
-                  <Draggable key={item._id} draggableId={item._id} index={index}>
-                    {(provided) => (
-                      <Card
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        className="p-4"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div {...provided.dragHandleProps}>
-                            <GripVertical className="h-5 w-5 text-gray-400" />
-                          </div>
-                          
-                          <div className="flex items-center gap-3 flex-1">
-                            <div 
-                              className="p-2 rounded-lg"
-                              style={{ backgroundColor: `${item.color}20`, color: item.color }}
-                            >
-                              <IconComponent className="h-5 w-5" />
-                            </div>
-                            <div>
-                              <h3 className="font-medium">{item.name}</h3>
-                              <p className="text-sm text-gray-500">{item.url}</p>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-4">
-                            <div className="flex items-center gap-2 text-sm">
-                              <span>Active:</span>
-                              <Switch
-                                checked={item.isActive}
-                                onCheckedChange={(checked) => {
-                                  handleSave({ ...item, isActive: checked });
-                                }}
-                              />
-                            </div>
-                            <div className="flex items-center gap-2 text-sm">
-                              <span>Footer:</span>
-                              <Switch
-                                checked={item.showInFooter}
-                                onCheckedChange={(checked) => {
-                                  handleSave({ ...item, showInFooter: checked });
-                                }}
-                              />
-                            </div>
-                            <div className="flex items-center gap-2 text-sm">
-                              <span>Contact:</span>
-                              <Switch
-                                checked={item.showInContact}
-                                onCheckedChange={(checked) => {
-                                  handleSave({ ...item, showInContact: checked });
-                                }}
-                              />
-                            </div>
-                            
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => {
-                                setEditingItem(item);
-                                setIsDialogOpen(true);
-                              }}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleDelete(item._id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      </Card>
-                    )}
-                  </Draggable>
-                );
-              })}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
+  {(provided: DroppableProvided) => (
+    <div
+      {...provided.droppableProps}
+      ref={provided.innerRef}
+      className="space-y-4"
+    >
+      {socialMedia.map((item, index) => {
+        const IconComponent = getIconComponent(item.icon);
+        return (
+          <Draggable key={item._id} draggableId={item._id} index={index}>
+            {(provided) => (
+              <Card
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                className="p-4"
+              >
+                <div className="flex items-center gap-4">
+                  <div {...provided.dragHandleProps}>
+                    <GripVertical className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <div className="flex items-center gap-3 flex-1">
+                    <div
+                      className="p-2 rounded-lg"
+                      style={{ backgroundColor: `${item.color}20`, color: item.color }}
+                    >
+                      <IconComponent className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium">{item.name}</h3>
+                      <p className="text-sm text-gray-500">{item.url}</p>
+                    </div>
+                  </div>
+                  {/* actions */}
+                </div>
+              </Card>
+            )}
+          </Draggable>
+        );
+      })}
+      {provided.placeholder}
+    </div>
+  )}
+</Droppable>
       </DragDropContext>
     </div>
   );
