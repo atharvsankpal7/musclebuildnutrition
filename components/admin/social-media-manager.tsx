@@ -8,13 +8,13 @@ import type { DroppableProvided } from '@hello-pangea/dnd';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { 
-  Loader2, 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Save, 
-  X, 
+import {
+  Loader2,
+  Plus,
+  Edit,
+  Trash2,
+  Save,
+  X,
   GripVertical,
   Facebook,
   Instagram,
@@ -208,59 +208,29 @@ export function SocialMediaManager() {
 
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="social-media">
-  {(provided: DroppableProvided) => (
-    <div
-      {...provided.droppableProps}
-      ref={provided.innerRef}
-      className="space-y-4"
-    >
-      {socialMedia.map((item, index) => {
-        const IconComponent = getIconComponent(item.icon);
-        return (
-          <Draggable key={item._id} draggableId={item._id} index={index}>
-            {(provided) => (
-              <Card
-                ref={provided.innerRef}
-                {...provided.draggableProps}
-                className="p-4"
-              >
-                <div className="flex items-center gap-4">
-                  <div {...provided.dragHandleProps}>
-                    <GripVertical className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <div className="flex items-center gap-3 flex-1">
-                    <div
-                      className="p-2 rounded-lg"
-                      style={{ backgroundColor: `${item.color}20`, color: item.color }}
-                    >
-                      <IconComponent className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">{item.name}</h3>
-                      <p className="text-sm text-gray-500">{item.url}</p>
-                    </div>
-                  </div>
-                  {/* actions */}
-                </div>
-              </Card>
-            )}
-          </Draggable>
-        );
-      })}
-      {provided.placeholder}
-    </div>
-  )}
-</Droppable>
+          {(provided: DroppableProvided) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className="space-y-4"
+            >
+              {socialMedia.map((item, index) => (
+                <div key={item.id}>{item.name}</div>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
       </DragDropContext>
     </div>
   );
 }
 
-function SocialMediaForm({ 
-  item, 
-  onSave, 
-  onCancel 
-}: { 
+function SocialMediaForm({
+  item,
+  onSave,
+  onCancel
+}: {
   item: SocialMedia | null;
   onSave: (item: Omit<SocialMedia, '_id'> & { _id?: string }) => void;
   onCancel: () => void;
