@@ -16,7 +16,7 @@ export function Footer() {
               <div className="w-10 h-10 rounded-full flex items-center justify-center bg-transparent">
   <Image
     src="/logos/logo white.jpg"
-    alt="TechVerse Logo"
+    alt="Logo"
     width={40}
     height={40}
     className="rounded-full"
@@ -35,9 +35,9 @@ export function Footer() {
           <div className="space-y-4">
             <h4 className="font-semibold text-gray-800">Quick Links</h4>
             <ul className="space-y-2 text-sm text-gray-600">
-              <li><Link href="#" className="hover:text-gray-800">About Us</Link></li>
-              <li><Link href="#" className="hover:text-gray-800">Products</Link></li>
-              <li><Link href="#" className="hover:text-gray-800">Contact</Link></li>
+              <li><Link href="/about" className="hover:text-gray-800">About Us</Link></li>
+              <li><Link href="/products" className="hover:text-gray-800">Products</Link></li>
+              <li><Link href="/contact" className="hover:text-gray-800">Contact</Link></li>
             </ul>
           </div>
 

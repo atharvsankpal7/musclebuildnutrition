@@ -4,11 +4,11 @@ export const seoConfig = {
   siteUrl: 'https://sscreation.com',
   defaultTitle: 'SSCreation - #1 Premium Graphic Design Templates | Festival & Business Designs',
   defaultDescription: 'SSCreation offers premium graphic design templates for festivals, celebrations, and business needs. Download high-quality Marathi, Hindi, and English templates instantly. Best graphic design templates in India.',
-  
+
   // Primary keywords for ranking
   primaryKeywords: [
     'sscreation',
-    'ss creation', 
+    'ss creation',
     'SSCreation',
     'graphic design templates',
     'premium templates',
@@ -16,7 +16,7 @@ export const seoConfig = {
     'business templates',
     'design templates india'
   ],
-  
+
   // Long-tail keywords
   longTailKeywords: [
     'sscreation graphic design templates',
@@ -30,23 +30,23 @@ export const seoConfig = {
     'celebration graphics templates',
     'social media design templates'
   ],
-  
+
   // Social media handles
   social: {
     facebook: 'https://facebook.com/sscreation',
-    instagram: 'https://instagram.com/sscreation', 
+    instagram: 'https://instagram.com/sscreation',
     twitter: 'https://twitter.com/sscreation',
     youtube: 'https://youtube.com/@sscreation',
     linkedin: 'https://linkedin.com/company/sscreation'
   },
-  
+
   // Business information
   business: {
     name: 'SSCreation',
     legalName: 'SS Creation Private Limited',
     description: 'Premium graphic design templates and custom design services',
     email: 'info@sscreation.com',
-    phone: '+91-9876543210',
+    phone: '+91-9657866181',
     address: {
       street: '123 Design Street',
       city: 'Mumbai',
@@ -55,7 +55,7 @@ export const seoConfig = {
       country: 'India'
     }
   },
-  
+
   // Schema.org structured data
   organizationSchema: {
     '@context': 'https://schema.org',
@@ -75,7 +75,7 @@ export const seoConfig = {
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'customer service',
-      telephone: '+91-9876543210',
+      telephone: '+91-9657866181',
       email: 'info@sscreation.com',
       url: 'https://sscreation.com/contact',
       availableLanguage: ['English', 'Hindi', 'Marathi']
@@ -96,7 +96,7 @@ export const seoConfig = {
       'https://linkedin.com/company/sscreation'
     ]
   },
-  
+
   // Website schema
   websiteSchema: {
     '@context': 'https://schema.org',
@@ -165,7 +165,7 @@ export const faqSchema = {
       }
     },
     {
-      '@type': 'Question', 
+      '@type': 'Question',
       name: 'Do I get commercial license with templates?',
       acceptedAnswer: {
         '@type': 'Answer',

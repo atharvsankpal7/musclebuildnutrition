@@ -27,11 +27,11 @@ interface ProductDetailClientProps {
 
 export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const router = useRouter();
-  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [showInquiryModal, setShowInquiryModal] = useState(false);
   const [expandedImage, setExpandedImage] = useState<string | null>(null);
 
-  const handlePurchase = () => {
-    setShowPurchaseModal(true);
+  const handleInquiry = () => {
+    setShowInquiryModal(true);
   };
 
   const handleShare = async () => {
@@ -67,13 +67,13 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
       <div className="space-y-4">
         <Button
           size="lg"
-          onClick={handlePurchase}
+          onClick={handleInquiry}
           className="w-full text-lg py-6"
         >
           <ShoppingCart className="h-5 w-5 mr-2" />
           Buy Now
         </Button>
-        
+
         <Button
           variant="outline"
           size="lg"
@@ -86,18 +86,18 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
       </div>
 
       {/* Image click handler - needs to be in client component */}
-      <div 
+      <div
         className="cursor-pointer hover:scale-105 transition-transform duration-300"
         onClick={() => setExpandedImage(product.displayImage)}
       >
         {/* This would wrap the image in the main component if needed */}
       </div>
 
-      {/* Purchase Modal */}
+      {/* Inquiry Modal */}
       <PurchaseModal
         product={product}
-        isOpen={showPurchaseModal}
-        onClose={() => setShowPurchaseModal(false)}
+        isOpen={showInquiryModal}
+        onClose={() => setShowInquiryModal(false)}
       />
 
       {/* Image Expansion Modal */}

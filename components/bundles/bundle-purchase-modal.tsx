@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Package, Shield, Clock } from 'lucide-react';
+import { Package, Shield, MessageCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { config } from '@/lib/config';
 
 interface BundlePurchaseModalProps {
   bundle: {
@@ -26,152 +27,57 @@ interface BundlePurchaseModalProps {
 
 export function BundlePurchaseModal({ bundle, isOpen, onClose }: BundlePurchaseModalProps) {
   const [email, setEmail] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
-  const [step, setStep] = useState<'email' | 'verify' | 'payment'>('email');
-  const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState<'contact' | 'whatsapp'>('contact');
 
-  const handleSendVerification = async () => {
-    if (!email) {
+  const handleDirectWhatsApp = () => {
+    // Go directly to WhatsApp without email
+    handleWhatsAppMessage();
+  };
+
+  const handleWithContact = () => {
+    if (email.trim()) {
+      setStep('whatsapp');
+    } else {
       toast.error('Please enter your email');
-      return;
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      toast.error('Please enter a valid email address');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const response = await fetch('/api/purchase/bundle/verify-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, bundleId: bundle?.id }),
-      });
-
-      if (response.ok) {
-        setStep('verify');
-        toast.success('Verification code sent to your email');
-      } else {
-        const errorData = await response.json();
-        toast.error(errorData.error || 'Failed to send verification code');
-      }
-    } catch (error : any) {
-      toast.error('Something went wrong');
-    } finally {
-      setLoading(false);
     }
   };
 
-  const handleVerifyCode = async () => {
-    if (!verificationCode) {
-      toast.error('Please enter verification code');
-      return;
+  const handleWhatsAppMessage = () => {
+    if (!bundle) return;
+
+    // Get the current bundle URL (assuming bundles have their own route)
+    const bundleUrl = `${window.location.origin}/bundles/${bundle.id}`;
+
+    // Create the WhatsApp message using the template from config
+    let message = config.whatsapp.bundleMessageTemplate.replace('{bundleUrl}', bundleUrl);
+
+    // Add email if provided
+    if (email.trim()) {
+      message += `\n\nMy email: ${email}`;
     }
 
-    if (verificationCode.length !== 6) {
-      toast.error('Verification code must be 6 digits');
-      return;
-    }
+    // Encode the message for WhatsApp
+    const encodedMessage = encodeURIComponent(message);
 
-    setLoading(true);
-    try {
-      const response = await fetch('/api/purchase/bundle/verify-code', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code: verificationCode, bundleId: bundle?.id }),
-      });
+    // WhatsApp business number from config
+    const whatsappNumber = config.whatsapp.businessNumber;
 
-      if (response.ok) {
-        setStep('payment');
-        toast.success('Email verified successfully');
-      } else {
-        const errorData = await response.json();
-        toast.error(errorData.error || 'Invalid verification code');
-      }
-    } catch (error : any) {
-      toast.error('Something went wrong');
-    } finally {
-      setLoading(false);
-    }
-  };
+    // Create WhatsApp URL
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
 
-  const handlePayment = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('/api/purchase/bundle/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, bundleId: bundle?.id }),
-      });
+    // Open WhatsApp in new tab
+    window.open(whatsappUrl, '_blank');
 
-      const data = await response.json();
-      
-      if (response.ok) {
-        // Initialize Razorpay
-        const script = document.createElement('script');
-        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-        script.onload = () => {
-          const options = {
-            key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-            amount: data.amount,
-            currency: 'INR',
-            name: 'SS Creation',
-            description: `Bundle: ${data.bundleName}`,
-            order_id: data.orderId,
-            handler: async (response: any) => {
-              // Verify payment
-              const verifyResponse = await fetch('/api/purchase/bundle/verify-payment', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  orderId: data.orderId,
-                  paymentId: response.razorpay_payment_id,
-                  signature: response.razorpay_signature,
-                }),
-              });
+    // Show success message
+    toast.success('WhatsApp opened! Please send the message to complete your inquiry.');
 
-              if (verifyResponse.ok) {
-                toast.success('Payment successful! Bundle files will be sent to your email.');
-                onClose();
-              } else {
-                const errorData = await verifyResponse.json();
-                toast.error(errorData.error || 'Payment verification failed');
-              }
-            },
-            prefill: {
-              email: email,
-            },
-            theme: {
-              color: '#059669', // Emerald color for bundles
-            },
-            modal: {
-              ondismiss: () => {
-                setLoading(false);
-              }
-            }
-          };
-
-          const rzp = new (window as any).Razorpay(options);
-          rzp.open();
-        };
-        document.body.appendChild(script);
-      } else {
-        toast.error(data.error || 'Failed to create order');
-      }
-    } catch (error : any) {
-      toast.error('Something went wrong');
-    } finally {
-      setLoading(false);
-    }
+    // Close the modal
+    onClose();
   };
 
   const resetModal = () => {
     setEmail('');
-    setVerificationCode('');
-    setStep('email');
+    setStep('contact');
   };
 
   const finalPrice = bundle?.discountPrice || bundle?.originalPrice || 0;
@@ -188,7 +94,7 @@ export function BundlePurchaseModal({ bundle, isOpen, onClose }: BundlePurchaseM
         <DialogHeader>
           <DialogTitle className="flex items-center">
             <Package className="h-5 w-5 mr-2 text-emerald-600" />
-            Purchase Bundle
+            Buy About Bundle
           </DialogTitle>
         </DialogHeader>
 
@@ -212,87 +118,83 @@ export function BundlePurchaseModal({ bundle, isOpen, onClose }: BundlePurchaseM
           </div>
         )}
 
-        {step === 'email' && (
+        {step === 'contact' && (
           <div className="space-y-4">
-            <div className="flex items-center p-3 bg-blue-50 rounded-lg border border-blue-200">
-              <Shield className="h-5 w-5 text-blue-600 mr-2" />
-              <span className="text-sm text-blue-800">
-                Secure purchase with email verification
-              </span>
+            <div className="text-center mb-4">
+              <MessageCircle className="h-16 w-16 mx-auto text-green-600 mb-2" />
+              <p className="text-lg font-semibold">How would you like to proceed?</p>
+              <p className="text-sm text-gray-600 mt-2">
+                Choose to go directly to WhatsApp or add your email for better follow-up.
+              </p>
             </div>
-            
-            <div>
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                className="mt-1"
-              />
+
+            <div className="space-y-3">
+              <Button
+                onClick={handleDirectWhatsApp}
+                variant="outline"
+                className="w-full"
+              >
+                <MessageCircle className="h-4 w-4 mr-2" />
+                Go directly to WhatsApp
+              </Button>
+
+              <div className="text-center text-sm text-gray-500">OR</div>
+
+              <div>
+                <Label htmlFor="email">Add your email (optional)</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email (optional)"
+                  className="mt-1"
+                />
+              </div>
+
+              <Button
+                onClick={handleWithContact}
+                className="w-full bg-green-600 hover:bg-green-700"
+              >
+                <MessageCircle className="h-4 w-4 mr-2" />
+                Send WhatsApp Message with Email
+              </Button>
             </div>
-            <Button onClick={handleSendVerification} disabled={loading} className="w-full">
-              {loading ? 'Sending...' : 'Send Verification Code'}
-            </Button>
           </div>
         )}
 
-        {step === 'verify' && (
-          <div className="space-y-4">
-            <div className="flex items-center p-3 bg-amber-50 rounded-lg border border-amber-200">
-              <Clock className="h-5 w-5 text-amber-600 mr-2" />
-              <span className="text-sm text-amber-800">
-                Code expires in 10 minutes
-              </span>
-            </div>
-            
-            <div>
-              <Label htmlFor="code">Verification Code</Label>
-              <Input
-                id="code"
-                value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value)}
-                placeholder="Enter 6-digit code"
-                maxLength={6}
-                className="mt-1 text-center text-lg tracking-widest"
-              />
-            </div>
-            <Button onClick={handleVerifyCode} disabled={loading} className="w-full">
-              {loading ? 'Verifying...' : 'Verify Code'}
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={() => setStep('email')} 
-              className="w-full"
-            >
-              Change Email
-            </Button>
-          </div>
-        )}
-
-        {step === 'payment' && (
+        {step === 'whatsapp' && (
           <div className="space-y-4">
             <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
-              <div className="flex items-center justify-center mb-2">
-                <Shield className="h-5 w-5 text-green-600 mr-2" />
-                <span className="font-semibold text-green-800">Ready to Purchase</span>
-              </div>
-              <p className="text-green-700">
-                Amount: ₹{finalPrice.toLocaleString()}
-              </p>
-              {savings > 0 && (
-                <p className="text-sm text-green-600">
-                  You're saving ₹{savings.toLocaleString()}!
+              <div className="mb-4">
+                <MessageCircle className="h-16 w-16 mx-auto text-green-600 mb-2" />
+                <div className="flex items-center justify-center mb-2">
+                  <Shield className="h-5 w-5 text-green-600 mr-2" />
+                  <span className="font-semibold text-green-800">Ready to Send WhatsApp Message</span>
+                </div>
+                <p className="text-green-700">
+                  Bundle: {bundle?.name}
                 </p>
-              )}
+                {email && (
+                  <p className="text-sm text-green-600 mt-2">
+                    Email: {email}
+                  </p>
+                )}
+                <p className="text-sm text-green-600 mt-2">
+                  Click the button below to open WhatsApp with a pre-filled message about your interest in this bundle.
+                </p>
+              </div>
             </div>
-            <Button onClick={handlePayment} disabled={loading} className="w-full bg-emerald-600 hover:bg-emerald-700">
-              {loading ? 'Processing...' : 'Pay Now'}
+            <Button
+              onClick={handleWhatsAppMessage}
+              className="w-full bg-green-600 hover:bg-green-700"
+            >
+              <MessageCircle className="h-4 w-4 mr-2" />
+              Send WhatsApp Message
             </Button>
-            <Button 
-              variant="outline" 
-              onClick={() => setStep('verify')} 
+            <Button
+              variant="outline"
+              onClick={() => setStep('contact')}
               className="w-full"
             >
               Back

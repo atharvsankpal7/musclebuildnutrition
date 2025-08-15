@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, Phone, ChevronDown, Search } from 'lucide-react';
@@ -22,6 +22,7 @@ interface ClientHeaderProps {
 
 export function ClientHeader({ navigationSections, headerData }: ClientHeaderProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -35,6 +36,13 @@ export function ClientHeader({ navigationSections, headerData }: ClientHeaderPro
 
   const buildSectionUrl = (section: SectionHierarchy): string => {
     return `/products?section=${encodeURIComponent(section.name)}`;
+  };
+
+  const isActivePage = (path: string) => {
+    if (path === '/') {
+      return pathname === '/';
+    }
+    return pathname.startsWith(path);
   };
 
   const renderDesktopSubMenu = (children: SectionHierarchy[], level = 1) => {
@@ -102,50 +110,45 @@ export function ClientHeader({ navigationSections, headerData }: ClientHeaderPro
 
   return (
     <motion.div 
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-white/96 backdrop-blur-md shadow-lg border-b border-purple-100/60' 
-          : 'bg-white/92 backdrop-blur-sm shadow-sm'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200' : 'bg-white'
       }`}
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5 }}
     >
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <Link href="/" className="group flex items-center space-x-2">
-            <div className="relative">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <Image src={"/logos/header-logo.png"} width={80} height={80} alt='LOGO'/>
-              </div>
+        {/* Top Bar */}
+        <div className="flex items-center justify-between py-3">
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-2">
+            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg">M</span>
             </div>
-            <span className="text-xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              SS Creation
-            </span>
+            <div>
+              <div className="font-bold text-xl text-gray-900">Muscle Build</div>
+              <div className="text-sm text-gray-600">Nutrition</div>
+            </div>
           </Link>
-          
-          {/* Search Bar - Desktop */}
-          <div className="hidden lg:flex flex-1 max-w-md mx-8">
-            <SearchDropdown className="w-full" />
-          </div>
 
-          <div className="hidden lg:flex items-center space-x-4">
+          {/* Desktop Contact Info */}
+          <div className="hidden md:flex items-center space-x-6">
             <a 
               href={`tel:${headerData.phone.replace(/\s/g, '')}`} 
-              className="flex items-center text-gray-600 hover:text-purple-600 transition-colors duration-300 group text-sm"
+              className="flex items-center text-gray-600 hover:text-purple-600 transition-colors duration-300"
             >
-              <div className="w-7 h-7 bg-purple-100 rounded-full flex items-center justify-center mr-2 group-hover:bg-purple-200 transition-colors">
-                <Phone className="h-4 w-4" />
-              </div>
-              <span className="font-medium text-sm">{headerData.phone}</span>
+              <Phone className="h-4 w-4 mr-2" />
+              <span className="text-sm font-medium">{headerData.phone}</span>
             </a>
           </div>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden w-8 h-8 rounded-full hover:bg-purple-100"
+          {/* Mobile Menu Button */}
+          <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="lg:hidden p-2 text-gray-600 hover:text-purple-600 transition-colors duration-300"
           >
-            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
+            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
         
         {/* Desktop Navigation - Multi-row support */}
@@ -154,26 +157,50 @@ export function ClientHeader({ navigationSections, headerData }: ClientHeaderPro
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
               <Link 
                 href="/" 
-                className="relative text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium group py-1 text-sm"
+                className={`relative text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium group py-1 text-sm ${
+                  isActivePage('/') ? 'text-purple-600' : ''
+                }`}
               >
                 Home
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></span>
+                <span className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-300 ${
+                  isActivePage('/') ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}></span>
               </Link>
               
               <Link 
                 href="/about" 
-                className="relative text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium group py-1 text-sm"
+                className={`relative text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium group py-1 text-sm ${
+                  isActivePage('/about') ? 'text-purple-600' : ''
+                }`}
               >
                 About
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></span>
+                <span className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-300 ${
+                  isActivePage('/about') ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}></span>
               </Link>
               
               <Link 
                 href="/products" 
-                className="relative text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium group py-1 text-sm"
+                className={`relative text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium group py-1 text-sm ${
+                  isActivePage('/products') ? 'text-purple-600' : ''
+                }`}
               >
                 Products
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></span>
+                <span className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-300 ${
+                  isActivePage('/products') ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}></span>
+              </Link>
+              
+              <Link 
+                href="/demo" 
+                className={`relative text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium group py-1 text-sm ${
+                  isActivePage('/demo') ? 'text-purple-600' : ''
+                }`}
+              >
+                WhatsApp Demo
+                <span className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-300 ${
+                  isActivePage('/demo') ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}></span>
               </Link>
               
               {/* Dynamic Section Navigation */}
@@ -200,19 +227,15 @@ export function ClientHeader({ navigationSections, headerData }: ClientHeaderPro
               ))}
               
               <Link 
-                href="/bundles" 
-                className="relative text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium group py-1 text-sm"
-              >
-                Bundles
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></span>
-              </Link>
-              
-              <Link 
                 href="/contact" 
-                className="relative text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium group py-1 text-sm"
+                className={`relative text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium group py-1 text-sm ${
+                  isActivePage('/contact') ? 'text-purple-600' : ''
+                }`}
               >
                 Contact
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 group-hover:w-full transition-all duration-300"></span>
+                <span className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 transition-all duration-300 ${
+                  isActivePage('/contact') ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}></span>
               </Link>
             </div>
           </nav>
@@ -238,24 +261,40 @@ export function ClientHeader({ navigationSections, headerData }: ClientHeaderPro
             <div className="flex flex-col space-y-2">
               <Link 
                 href="/" 
-                className="text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium py-2 px-3 rounded-lg hover:bg-purple-50 text-sm"
+                className={`text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium py-2 px-3 rounded-lg hover:bg-purple-50 text-sm ${
+                  isActivePage('/') ? 'text-purple-600 bg-purple-50' : ''
+                }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </Link>
               <Link 
                 href="/about" 
-                className="text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium py-2 px-3 rounded-lg hover:bg-purple-50 text-sm"
+                className={`text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium py-2 px-3 rounded-lg hover:bg-purple-50 text-sm ${
+                  isActivePage('/about') ? 'text-purple-600 bg-purple-50' : ''
+                }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 About
               </Link>
               <Link 
                 href="/products" 
-                className="text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium py-2 px-3 rounded-lg hover:bg-purple-50 text-sm"
+                className={`text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium py-2 px-3 rounded-lg hover:bg-purple-50 text-sm ${
+                  isActivePage('/products') ? 'text-purple-600 bg-purple-50' : ''
+                }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Products
+              </Link>
+              
+              <Link 
+                href="/demo" 
+                className={`text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium py-2 px-3 rounded-lg hover:bg-purple-50 text-sm ${
+                  isActivePage('/demo') ? 'text-purple-600 bg-purple-50' : ''
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                WhatsApp Demo
               </Link>
               
               {/* Mobile Section Navigation */}
@@ -265,15 +304,10 @@ export function ClientHeader({ navigationSections, headerData }: ClientHeaderPro
               />
               
               <Link 
-                href="/bundles" 
-                className="text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium py-2 px-3 rounded-lg hover:bg-purple-50 text-sm"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Bundles
-              </Link>
-              <Link 
                 href="/contact" 
-                className="text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium py-2 px-3 rounded-lg hover:bg-purple-50 text-sm"
+                className={`text-gray-700 hover:text-purple-600 transition-colors duration-300 font-medium py-2 px-3 rounded-lg hover:bg-purple-50 text-sm ${
+                  isActivePage('/contact') ? 'text-purple-600 bg-purple-50' : ''
+                }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact

@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { MessageCircle } from 'lucide-react';
+import { config } from '@/lib/config';
 
 interface PurchaseModalProps {
   product: {
@@ -20,129 +22,57 @@ interface PurchaseModalProps {
 
 export function PurchaseModal({ product, isOpen, onClose }: PurchaseModalProps) {
   const [email, setEmail] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
-  const [step, setStep] = useState<'email' | 'verify' | 'payment'>('email');
-  const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState<'contact' | 'whatsapp'>('contact');
 
-  const handleSendVerification = async () => {
-    if (!email) {
+  const handleDirectWhatsApp = () => {
+    // Go directly to WhatsApp without email
+    handleWhatsAppMessage();
+  };
+
+  const handleWithContact = () => {
+    if (email.trim()) {
+      setStep('whatsapp');
+    } else {
       toast.error('Please enter your email');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const response = await fetch('/api/purchase/verify-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, productId: product?.id }),
-      });
-
-      if (response.ok) {
-        setStep('verify');
-        toast.success('Verification code sent to your email');
-      } else {
-        toast.error('Failed to send verification code');
-      }
-    } catch (error : any) {
-      toast.error('Something went wrong');
-    } finally {
-      setLoading(false);
     }
   };
 
-  const handleVerifyCode = async () => {
-    if (!verificationCode) {
-      toast.error('Please enter verification code');
-      return;
+  const handleWhatsAppMessage = () => {
+    if (!product) return;
+
+    // Get the current product URL
+    const productUrl = `${window.location.origin}/products/${product.id}`;
+
+    // Create the WhatsApp message
+    let message = config.whatsapp.messageTemplate.replace('{productUrl}', productUrl);
+
+    // Add email if provided
+    if (email.trim()) {
+      message += `\n\nMy email: ${email}`;
     }
 
-    setLoading(true);
-    try {
-      const response = await fetch('/api/purchase/verify-code', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code: verificationCode, productId: product?.id }),
-      });
+    // Encode the message for WhatsApp
+    const encodedMessage = encodeURIComponent(message);
 
-      if (response.ok) {
-        setStep('payment');
-        toast.success('Email verified successfully');
-      } else {
-        toast.error('Invalid verification code');
-      }
-    } catch (error : any) {
-      toast.error('Something went wrong');
-    } finally {
-      setLoading(false);
-    }
-  };
+    // WhatsApp business number from config
+    const whatsappNumber = config.whatsapp.businessNumber;
 
-  const handlePayment = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('/api/purchase/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, productId: product?.id }),
-      });
+    // Create WhatsApp URL
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
 
-      const data = await response.json();
-      
-      if (response.ok) {
-        // Initialize Razorpay
-        const script = document.createElement('script');
-        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-        script.onload = () => {
-          const options = {
-            key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-            amount: data.amount,
-            currency: 'INR',
-            name: 'SS Creation',
-            description: product?.title,
-            order_id: data.orderId,
-            handler: async (response: any) => {
-              // Verify payment
-              const verifyResponse = await fetch('/api/purchase/verify-payment', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  orderId: data.orderId,
-                  paymentId: response.razorpay_payment_id,
-                  signature: response.razorpay_signature,
-                }),
-              });
+    // Open WhatsApp in new tab
+    window.open(whatsappUrl, '_blank');
 
-              if (verifyResponse.ok) {
-                toast.success('Payment successful! Files will be sent to your email.');
-                onClose();
-              } else {
-                toast.error('Payment verification failed');
-              }
-            },
-            theme: {
-              color: '#3B82F6',
-            },
-          };
+    // Show success message
+    toast.success('WhatsApp opened! Please send the message to complete your inquiry.');
 
-          const rzp = new (window as any).Razorpay(options);
-          rzp.open();
-        };
-        document.body.appendChild(script);
-      } else {
-        toast.error('Failed to create order');
-      }
-    } catch (error : any) {
-      toast.error('Something went wrong');
-    } finally {
-      setLoading(false);
-    }
+    // Close the modal
+    onClose();
   };
 
   const resetModal = () => {
     setEmail('');
-    setVerificationCode('');
-    setStep('email');
+    setStep('contact');
   };
 
   return (
@@ -154,54 +84,88 @@ export function PurchaseModal({ product, isOpen, onClose }: PurchaseModalProps) 
     }}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Purchase {product?.title}</DialogTitle>
+          <DialogTitle>Buy About {product?.title}</DialogTitle>
         </DialogHeader>
 
-        {step === 'email' && (
+        {step === 'contact' && (
           <div className="space-y-4">
-            <div>
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-              />
-            </div>
-            <Button onClick={handleSendVerification} disabled={loading} className="w-full">
-              {loading ? 'Sending...' : 'Send Verification Code'}
-            </Button>
-          </div>
-        )}
-
-        {step === 'verify' && (
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="code">Verification Code</Label>
-              <Input
-                id="code"
-                value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value)}
-                placeholder="Enter verification code"
-              />
-            </div>
-            <Button onClick={handleVerifyCode} disabled={loading} className="w-full">
-              {loading ? 'Verifying...' : 'Verify Code'}
-            </Button>
-          </div>
-        )}
-
-        {step === 'payment' && (
-          <div className="space-y-4">
-            <div className="text-center">
-              <p className="text-lg font-semibold">Ready to Purchase</p>
-              <p className="text-gray-600">
-                Amount: ₹{product?.discountPrice || product?.originalPrice}
+            <div className="text-center mb-4">
+              <MessageCircle className="h-16 w-16 mx-auto text-green-600 mb-2" />
+              <p className="text-lg font-semibold">How would you like to proceed?</p>
+              <p className="text-sm text-gray-600 mt-2">
+                Choose to go directly to WhatsApp or add your email for better follow-up.
               </p>
             </div>
-            <Button onClick={handlePayment} disabled={loading} className="w-full">
-              {loading ? 'Processing...' : 'Pay Now'}
+
+            <div className="space-y-3">
+              <Button
+                onClick={handleDirectWhatsApp}
+                variant="outline"
+                className="w-full"
+              >
+                <MessageCircle className="h-4 w-4 mr-2" />
+                Go directly to WhatsApp
+              </Button>
+
+              <div className="text-center text-sm text-gray-500">OR</div>
+
+              <div>
+                <Label htmlFor="email">Add your email (optional)</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email (optional)"
+                  className="mt-1"
+                />
+              </div>
+
+              <Button
+                onClick={handleWithContact}
+                className="w-full bg-green-600 hover:bg-green-700"
+              >
+                <MessageCircle className="h-4 w-4 mr-2" />
+                Send WhatsApp Message with Email
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {step === 'whatsapp' && (
+          <div className="space-y-4">
+            <div className="text-center">
+              <div className="mb-4">
+                <MessageCircle className="h-16 w-16 mx-auto text-green-600 mb-2" />
+                <p className="text-lg font-semibold">Ready to Send WhatsApp Message</p>
+                <p className="text-gray-600">
+                  Product: {product?.title}
+                </p>
+                {email && (
+                  <p className="text-sm text-green-600 mt-2">
+                    Email: {email}
+                  </p>
+                )}
+                <p className="text-sm text-gray-500 mt-2">
+                  Click the button below to open WhatsApp with a pre-filled message about your interest in this product.
+                </p>
+              </div>
+            </div>
+
+            <Button
+              onClick={handleWhatsAppMessage}
+              className="w-full bg-green-600 hover:bg-green-700"
+            >
+              <MessageCircle className="h-4 w-4 mr-2" />
+              Send WhatsApp Message
+            </Button>
+
+            <Button
+              variant="outline"
+              onClick={() => setStep('contact')}
+              className="w-full"
+            >
+              Back
             </Button>
           </div>
         )}

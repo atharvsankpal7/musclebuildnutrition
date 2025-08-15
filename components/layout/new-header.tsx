@@ -81,7 +81,7 @@ export function NewHeader({ navigationSections = [], headerData }: NewHeaderProp
             {/* Navigation Links */}
             <nav className="flex items-center space-x-6">
               <Link
-                href="/products"
+                href="/"
                 className="group flex items-center space-x-2 text-gray-700 hover:text-red-600 transition-all duration-300 font-medium py-2 px-3 rounded-lg hover:bg-red-50"
               >
                 <div className="w-3 h-3 bg-red-500 rounded-sm group-hover:scale-110 transition-transform duration-300"></div>
