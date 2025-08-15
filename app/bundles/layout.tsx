@@ -1,18 +1,20 @@
 import { Footer } from '@/components/layout/footer';
 import { SSRHeader } from '@/components/layout/ssr-header';
-import { Metadata } from 'next'
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Design Bundles - SSCreation | Premium Graphic Design Template Collections',
-  description: 'Explore SSCreation\'s exclusive design bundles featuring multiple premium graphic design templates at incredible value. Perfect for businesses, events, and creative projects. Save up to 70% on bundle collections.',
-  keywords: 'SSCreation bundles, design bundles, graphic design collections, premium template bundles, festival design bundles, business template collections, bulk design templates, discounted design packages',
+  title: 'Product Bundles - Musclebuild Nutrition | Premium Fitness & Nutrition Bundles',
+  description: 'Explore Musclebuild Nutrition\'s exclusive fitness and nutrition bundles featuring multiple premium products at incredible value. Perfect for comprehensive fitness and health goals. Save up to 70% on bundle collections.',
+  keywords: 'musclebuild nutrition bundles, fitness bundles, nutrition packages, health supplements bundle, muscle building packages, weight management bundles',
   openGraph: {
-    title: 'Design Bundles - SSCreation | Premium Template Collections',
-    description: 'Explore SSCreation\'s exclusive design bundles featuring multiple premium templates at incredible value. Save up to 70% on bundle collections.',
-    url: 'https://sscreation.com/bundles',
+    title: 'Product Bundles - Musclebuild Nutrition | Premium Fitness & Nutrition Bundles',
+    description: 'Explore Musclebuild Nutrition\'s exclusive fitness and nutrition bundles featuring multiple premium products at incredible value.',
+    type: 'website',
   },
-  alternates: {
-    canonical: 'https://sscreation.com/bundles',
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Product Bundles - Musclebuild Nutrition | Premium Fitness & Nutrition Bundles',
+    description: 'Explore Musclebuild Nutrition\'s exclusive fitness and nutrition bundles featuring multiple premium products at incredible value.',
   },
 };
 
@@ -21,9 +23,5 @@ export default function BundlesLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <>
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }

@@ -1,23 +1,29 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-export interface IProduct extends Document {
+export interface ICategory extends Document {
   title: string;
+  slug: string;
   description: string;
   originalPrice: number;
   discountPrice?: number;
-  categoryIds: mongoose.Types.ObjectId[]; // Up to 8 categories
+  sectionIds: mongoose.Types.ObjectId[];
   displayImage: string;
-  productFiles: string[];
+  categoryFiles: string[];
   isFeatured: boolean;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
 
-const ProductSchema = new Schema<IProduct>({
+const CategorySchema = new Schema<ICategory>({
   title: {
     type: String,
     required: true,
+  },
+  slug: {
+    type: String,
+    required: true,
+    unique: true,
   },
   description: {
     type: String,
@@ -30,21 +36,16 @@ const ProductSchema = new Schema<IProduct>({
   discountPrice: {
     type: Number,
   },
-  categoryIds: {
-    type: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
+  sectionIds: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Section',
     required: true,
-    validate: {
-      validator: function (categories: mongoose.Types.ObjectId[]) {
-        return Array.isArray(categories) && categories.length > 0 && categories.length <= 8;
-      },
-      message: 'A product must have 1-8 categories',
-    },
-  },
+  }],
   displayImage: {
     type: String,
     required: true,
   },
-  productFiles: [{
+  categoryFiles: [{
     type: String,
     required: true,
   }],
@@ -60,4 +61,4 @@ const ProductSchema = new Schema<IProduct>({
   timestamps: true,
 });
 
-export default mongoose.models.Product || mongoose.model<IProduct>('Product', ProductSchema);
+export default mongoose.models.Category || mongoose.model<ICategory>('Category', CategorySchema);

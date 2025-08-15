@@ -1,61 +1,62 @@
-import Head from 'next/head'
+import { seoConfig } from '@/lib/seo-config';
 
 interface SEOHeadProps {
-  title?: string
-  description?: string
-  keywords?: string
-  canonical?: string
-  ogImage?: string
-  noindex?: boolean
+  title?: string;
+  description?: string;
+  keywords?: string;
+  image?: string;
+  url?: string;
+  type?: 'website' | 'article' | 'product';
+  noIndex?: boolean;
 }
 
 export function SEOHead({
-  title = 'SSCreation - #1 Premium Graphic Design Templates',
-  description = 'SSCreation offers premium graphic design templates for festivals, celebrations, and business needs. Download instantly with commercial license.',
-  keywords = 'sscreation, ss creation, graphic design templates, premium templates, festival designs',
-  canonical,
-  ogImage = '/og-image.jpg',
-  noindex = false
+  title = seoConfig.defaultTitle,
+  description = seoConfig.defaultDescription,
+  keywords = 'musclebuild nutrition, fitness supplements, nutrition products, muscle building, weight management, health supplements, protein supplements, fitness nutrition',
+  image = seoConfig.defaultImage,
+  url,
+  type = 'website',
+  noIndex = false
 }: SEOHeadProps) {
+  const fullUrl = url ? `${seoConfig.siteUrl}${url}` : seoConfig.siteUrl;
+  const fullImageUrl = image.startsWith('http') ? image : `${seoConfig.siteUrl}${image}`;
+
   return (
-    <Head>
+    <>
+      {/* Basic Meta Tags */}
       <title>{title}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
+      <meta name="robots" content={noIndex ? 'noindex, nofollow' : 'index, follow'} />
       
       {/* Canonical URL */}
-      {canonical && <link rel="canonical" href={canonical} />}
+      <link rel="canonical" href={fullUrl} />
       
-      {/* Robots */}
-      <meta name="robots" content={noindex ? 'noindex,nofollow' : 'index,follow'} />
-      
-      {/* Open Graph */}
+      {/* Open Graph Meta Tags */}
+      <meta property="og:type" content={type} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={ogImage} />
-      <meta property="og:type" content="website" />
-      <meta property="og:site_name" content="SSCreation" />
+      <meta property="og:image" content={fullImageUrl} />
+      <meta property="og:url" content={fullUrl} />
+      <meta property="og:site_name" content="Musclebuild Nutrition" />
+      <meta property="og:locale" content="en_US" />
       
-      {/* Twitter */}
+      {/* Twitter Card Meta Tags */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={ogImage} />
-      <meta name="twitter:creator" content="@sscreation" />
+      <meta name="twitter:image" content={fullImageUrl} />
+      <meta name="twitter:site" content="@musclebuildnutrition" />
       
-      {/* Additional SEO tags */}
-      <meta name="author" content="SSCreation" />
-      <meta name="publisher" content="SSCreation" />
-      <meta name="language" content="en" />
-      <meta name="revisit-after" content="7 days" />
-      <meta name="distribution" content="global" />
-      <meta name="rating" content="general" />
+      {/* Additional Meta Tags */}
+      <meta name="author" content="Musclebuild Nutrition" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta name="theme-color" content="#dc2626" />
       
-      {/* Geo tags for local SEO */}
-      <meta name="geo.region" content="IN-MH" />
-      <meta name="geo.placename" content="Mumbai" />
-      <meta name="geo.position" content="19.0760;72.8777" />
-      <meta name="ICBM" content="19.0760, 72.8777" />
-    </Head>
-  )
+      {/* Favicon */}
+      <link rel="icon" href="/logos/favicon.ico" />
+      <link rel="apple-touch-icon" href="/logos/header-logo.png" />
+    </>
+  );
 }

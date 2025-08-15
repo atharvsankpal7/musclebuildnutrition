@@ -2,14 +2,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { PurchaseModal } from '@/components/products/purchase-modal';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ShoppingCart, Share2 } from 'lucide-react';
 import Image from 'next/image';
-import {
-  Dialog,
-  DialogContent,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { config } from '@/lib/config';
 
 interface Product {
   id: string;
@@ -27,11 +24,15 @@ interface ProductDetailClientProps {
 
 export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const router = useRouter();
-  const [showInquiryModal, setShowInquiryModal] = useState(false);
   const [expandedImage, setExpandedImage] = useState<string | null>(null);
 
-  const handleInquiry = () => {
-    setShowInquiryModal(true);
+  const openWhatsApp = () => {
+    const productUrl = `${window.location.origin}/products/${product.id}`;
+    const message = config.whatsapp.messageTemplate.replace('{productUrl}', productUrl);
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappNumber = config.whatsapp.businessNumber;
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   const handleShare = async () => {
@@ -46,14 +47,12 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         console.log('Error sharing:', error);
       }
     } else {
-      // Fallback: copy to clipboard
       navigator.clipboard.writeText(window.location.href);
     }
   };
 
   return (
     <>
-      {/* Back Button */}
       <Button
         variant="ghost"
         onClick={() => router.back()}
@@ -63,15 +62,14 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         Back
       </Button>
 
-      {/* Action Buttons */}
       <div className="space-y-4">
         <Button
           size="lg"
-          onClick={handleInquiry}
+          onClick={openWhatsApp}
           className="w-full text-lg py-6"
         >
           <ShoppingCart className="h-5 w-5 mr-2" />
-          Buy Now
+          Buy on WhatsApp
         </Button>
 
         <Button
@@ -85,22 +83,12 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         </Button>
       </div>
 
-      {/* Image click handler - needs to be in client component */}
       <div
         className="cursor-pointer hover:scale-105 transition-transform duration-300"
         onClick={() => setExpandedImage(product.displayImage)}
       >
-        {/* This would wrap the image in the main component if needed */}
       </div>
 
-      {/* Inquiry Modal */}
-      <PurchaseModal
-        product={product}
-        isOpen={showInquiryModal}
-        onClose={() => setShowInquiryModal(false)}
-      />
-
-      {/* Image Expansion Modal */}
       <Dialog
         open={!!expandedImage}
         onOpenChange={(open) => !open && setExpandedImage(null)}

@@ -1,125 +1,81 @@
 // SEO Configuration for SSCreation
 export const seoConfig = {
-  siteName: 'SSCreation',
-  siteUrl: 'https://sscreation.com',
-  defaultTitle: 'SSCreation - #1 Premium Graphic Design Templates | Festival & Business Designs',
-  defaultDescription: 'SSCreation offers premium graphic design templates for festivals, celebrations, and business needs. Download high-quality Marathi, Hindi, and English templates instantly. Best graphic design templates in India.',
-
-  // Primary keywords for ranking
-  primaryKeywords: [
-    'sscreation',
-    'ss creation',
-    'SSCreation',
-    'graphic design templates',
-    'premium templates',
-    'festival designs',
-    'business templates',
-    'design templates india'
+  defaultTitle: 'Musclebuild Nutrition - Premium Fitness & Nutrition Products',
+  defaultDescription: 'Musclebuild Nutrition offers premium fitness and nutrition products for muscle building, weight management, and overall health. Quality supplements and nutrition solutions.',
+  defaultKeywords: [
+    'musclebuild nutrition',
+    'fitness supplements',
+    'nutrition products',
+    'muscle building',
+    'weight management',
+    'health supplements',
+    'protein supplements',
+    'fitness nutrition'
   ],
-
-  // Long-tail keywords
-  longTailKeywords: [
-    'sscreation graphic design templates',
-    'ss creation premium templates',
-    'festival design templates india',
-    'marathi graphic design templates',
-    'hindi festival templates',
-    'english business templates',
-    'instant download design templates',
-    'commercial license templates',
-    'celebration graphics templates',
-    'social media design templates'
-  ],
-
-  // Social media handles
-  social: {
-    facebook: 'https://facebook.com/sscreation',
-    instagram: 'https://instagram.com/sscreation',
-    twitter: 'https://twitter.com/sscreation',
-    youtube: 'https://youtube.com/@sscreation',
-    linkedin: 'https://linkedin.com/company/sscreation'
-  },
-
-  // Business information
-  business: {
-    name: 'SSCreation',
-    legalName: 'SS Creation Private Limited',
-    description: 'Premium graphic design templates and custom design services',
-    email: 'info@sscreation.com',
-    phone: '+91-9657866181',
-    address: {
-      street: '123 Design Street',
-      city: 'Mumbai',
-      state: 'Maharashtra',
-      postalCode: '400001',
-      country: 'India'
-    }
-  },
-
-  // Schema.org structured data
-  organizationSchema: {
-    '@context': 'https://schema.org',
+  defaultImage: '/logos/header-logo.png',
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://musclebuildnutrition.com',
+  
+  // Organization Schema
+  organization: {
     '@type': 'Organization',
-    name: 'SSCreation',
-    alternateName: ['SS Creation', 'sscreation'],
-    url: 'https://sscreation.com',
-    logo: 'https://sscreation.com/logo.png',
-    description: 'SSCreation offers premium graphic design templates, festival designs, business cards, social media templates, and celebration graphics.',
-    foundingDate: '2020',
-    founders: [
-      {
-        '@type': 'Person',
-        name: 'SS Creation Team'
-      }
-    ],
+    name: 'Musclebuild Nutrition',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://musclebuildnutrition.com',
+    logo: {
+      '@type': 'ImageObject',
+      url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://musclebuildnutrition.com'}/logos/header-logo.png`,
+      width: 512,
+      height: 512
+    },
+    description: 'Premium fitness and nutrition products for health and wellness',
+    legalName: 'Musclebuild Nutrition Private Limited',
+    foundingDate: '2024',
     contactPoint: {
       '@type': 'ContactPoint',
-      contactType: 'customer service',
       telephone: '+91-9657866181',
-      email: 'info@sscreation.com',
-      url: 'https://sscreation.com/contact',
+      contactType: 'customer service',
+      areaServed: 'IN',
       availableLanguage: ['English', 'Hindi', 'Marathi']
     },
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: '123 Design Street',
-      addressLocality: 'Mumbai',
-      addressRegion: 'Maharashtra',
-      postalCode: '400001',
-      addressCountry: 'IN'
-    },
     sameAs: [
-      'https://facebook.com/sscreation',
-      'https://instagram.com/sscreation',
-      'https://twitter.com/sscreation',
-      'https://youtube.com/@sscreation',
-      'https://linkedin.com/company/sscreation'
+      'https://facebook.com/musclebuildnutrition',
+      'https://instagram.com/musclebuildnutrition',
+      'https://twitter.com/musclebuildnutrition'
     ]
   },
 
-  // Website schema
-  websiteSchema: {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'SSCreation',
-    alternateName: 'SS Creation',
-    url: 'https://sscreation.com',
-    description: 'Premium graphic design templates for festivals, celebrations, and business needs',
-    publisher: {
+  // Person Schema (for team members)
+  person: {
+    '@type': 'Person',
+    name: 'Musclebuild Nutrition Team',
+    jobTitle: 'Fitness & Nutrition Specialists',
+    worksFor: {
       '@type': 'Organization',
-      name: 'SSCreation'
+      name: 'Musclebuild Nutrition'
     },
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: 'https://sscreation.com/products?search={search_term_string}',
-      'query-input': 'required name=search_term_string'
-    }
+    description: 'Expert team dedicated to providing quality fitness and nutrition solutions',
+    sameAs: [
+      'https://linkedin.com/company/musclebuildnutrition'
+    ]
+  },
+
+  // Product Schema
+  product: {
+    '@type': 'Product',
+    name: 'Musclebuild Nutrition Products',
+    description: 'Premium fitness and nutrition products for muscle building, weight management, and overall health',
+    brand: {
+      '@type': 'Brand',
+      name: 'Musclebuild Nutrition',
+      alternateName: 'Musclebuild Nutrition',
+      description: 'Premium fitness and nutrition brand'
+    },
+    category: 'Health & Fitness'
   }
-}
+};
 
 // Generate meta keywords for specific pages
 export const generateKeywords = (pageKeywords: string[]) => {
-  return [...seoConfig.primaryKeywords, ...pageKeywords, ...seoConfig.longTailKeywords].join(', ')
+  return [...seoConfig.defaultKeywords, ...pageKeywords].join(', ')
 }
 
 // Generate structured data for products
@@ -131,7 +87,7 @@ export const generateProductSchema = (product: any) => ({
   image: product.displayImage,
   brand: {
     '@type': 'Brand',
-    name: 'SSCreation'
+    name: 'Musclebuild Nutrition'
   },
   offers: {
     '@type': 'Offer',
@@ -140,10 +96,10 @@ export const generateProductSchema = (product: any) => ({
     availability: 'https://schema.org/InStock',
     seller: {
       '@type': 'Organization',
-      name: 'SSCreation'
+      name: 'Musclebuild Nutrition'
     }
   },
-  category: 'Graphic Design Templates',
+  category: 'Fitness & Nutrition Products',
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: '4.8',
@@ -158,34 +114,34 @@ export const faqSchema = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'What is SSCreation?',
+      name: 'What is Musclebuild Nutrition?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'SSCreation is a premium graphic design template marketplace offering high-quality festival designs, business templates, and celebration graphics for instant download.'
+        text: 'Musclebuild Nutrition is a premium fitness and nutrition brand offering high-quality supplements for muscle building, weight management, and overall health.'
       }
     },
     {
       '@type': 'Question',
-      name: 'Do I get commercial license with templates?',
+      name: 'Are your products safe and certified?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes, all SSCreation templates come with commercial license allowing you to use them for business purposes and client projects.'
+        text: 'Yes, all Musclebuild Nutrition products are manufactured in certified facilities and meet strict quality standards for safety and efficacy.'
       }
     },
     {
       '@type': 'Question',
-      name: 'What languages are supported in templates?',
+      name: 'What types of supplements do you offer?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'SSCreation offers templates in multiple languages including English, Hindi, and Marathi to cater to diverse audiences.'
+        text: 'We offer a wide range of supplements including protein powders, mass gainers, pre-workout formulas, and specialized nutrition products for different fitness goals.'
       }
     },
     {
       '@type': 'Question',
-      name: 'How do I download templates after purchase?',
+      name: 'How do I place an order?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'After successful payment, you will receive instant download links via email. You can also access your purchases from your account dashboard.'
+        text: 'You can place orders through our website, WhatsApp, or by calling our customer service. We offer convenient payment options and fast delivery.'
       }
     }
   ]

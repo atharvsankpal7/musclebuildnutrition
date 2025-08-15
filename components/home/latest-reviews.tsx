@@ -83,22 +83,6 @@ export function LatestReviews() {
                     <h3 className="font-semibold text-gray-900 text-lg mb-2 group-hover:text-red-600 transition-colors duration-300">
                       {review.title}
                     </h3>
-
-                    {/* Star Rating */}
-                    <div className="flex items-center space-x-1 mb-2">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${i < Math.floor(review.rating)
-                              ? 'text-red-500 fill-current'
-                              : 'text-gray-300'
-                            }`}
-                        />
-                      ))}
-                      <span className="ml-2 text-sm font-medium text-gray-600">
-                        {review.rating}
-                      </span>
-                    </div>
                   </div>
                 </div>
 

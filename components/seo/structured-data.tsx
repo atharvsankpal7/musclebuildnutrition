@@ -1,7 +1,7 @@
 import { seoConfig } from '@/lib/seo-config'
 
 interface StructuredDataProps {
-  type?: 'organization' | 'website' | 'product' | 'faq'
+  type?: 'organization' | 'website' | 'product' | 'faq' | 'person'
   data?: any
 }
 
@@ -10,19 +10,41 @@ export function StructuredData({ type = 'organization', data }: StructuredDataPr
 
   switch (type) {
     case 'organization':
-      schema = seoConfig.organizationSchema
+      schema = {
+        "@context": "https://schema.org",
+        ...seoConfig.organization
+      }
       break
     case 'website':
-      schema = seoConfig.websiteSchema
+      schema = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Musclebuild Nutrition",
+        "url": seoConfig.siteUrl,
+        "description": seoConfig.defaultDescription,
+        "publisher": {
+          "@type": "Organization",
+          "name": "Musclebuild Nutrition"
+        }
+      }
       break
     case 'product':
-      schema = data
+      schema = data || seoConfig.product
+      break
+    case 'person':
+      schema = {
+        "@context": "https://schema.org",
+        ...seoConfig.person
+      }
       break
     case 'faq':
       schema = data
       break
     default:
-      schema = seoConfig.organizationSchema
+      schema = {
+        "@context": "https://schema.org",
+        ...seoConfig.organization
+      }
   }
 
   return (

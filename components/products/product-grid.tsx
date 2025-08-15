@@ -11,9 +11,9 @@ import { Badge } from '@/components/ui/badge';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { Grid, List, Star, ShoppingCart, Eye } from 'lucide-react';
 
-interface ProductSection {
+interface ProductCategory {
   id: string;
-  name: string;
+  title: string;
   slug: string;
 }
 
@@ -25,7 +25,7 @@ interface Product {
   originalPrice: number;
   discountPrice?: number;
   isFeatured: boolean;
-  sections: ProductSection[];
+  categories: ProductCategory[];
 }
 
 interface ProductGridProps {
@@ -54,7 +54,7 @@ export function ProductGrid({
   const handleSortChange = (newSort: string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('sort', newSort);
-    params.delete('page'); // Reset to first page
+    params.delete('page');
     router.push(`?${params.toString()}`);
   };
 
@@ -75,20 +75,6 @@ export function ProductGrid({
   const calculateDiscount = (original: number, discount?: number) => {
     if (!discount) return 0;
     return Math.round(((original - discount) / original) * 100);
-  };
-
-  // Build proper section URL based on current section path context
-  const buildSectionUrl = (sectionSlug: string) => {
-    // If we're already in a section context, navigate to the specific section
-    // Otherwise, navigate to the section directly
-    return `/products/${sectionSlug}`;
-  };
-
-  // Get section badge variant based on section hierarchy level (if available)
-  const getSectionBadgeVariant = (section: ProductSection) => {
-    // You could extend this to show different variants for different levels
-    // For now, we'll use a consistent style with hover effects
-    return "outline";
   };
 
   const renderGridView = () => (
@@ -136,25 +122,24 @@ export function ProductGrid({
             </h3>
 
             <div className="flex flex-wrap gap-1 mb-3">
-              {product.sections.slice(0, 2).map((section) => (
+              {product.categories.slice(0, 2).map((category) => (
                 <Badge
-                  key={section.id}
+                  key={category.id}
                   variant="outline"
                   className="text-xs hover:bg-purple-50 hover:border-purple-300 transition-colors cursor-pointer"
-                // asChild
                 >
-                  <Link href={`/products/${section.slug}`}>
-                    {section.name}
+                  <Link href={`/products?category=${category.slug}`}>
+                    {category.title}
                   </Link>
                 </Badge>
               ))}
-              {product.sections.length > 2 && (
+              {product.categories.length > 2 && (
                 <Badge
                   variant="outline"
                   className="text-xs bg-gray-100 hover:bg-gray-200 transition-colors cursor-help"
-                  title={`Also in: ${product.sections.slice(2).map(s => s.name).join(', ')}`}
+                  title={`Also in: ${product.categories.slice(2).map(s => s.title).join(', ')}`}
                 >
-                  +{product.sections.length - 2}
+                  +{product.categories.length - 2}
                 </Badge>
               )}
             </div>
@@ -219,25 +204,24 @@ export function ProductGrid({
                     </p>
 
                     <div className="flex flex-wrap gap-1 mb-3">
-                      {product.sections.slice(0, 3).map((section) => (
+                      {product.categories.slice(0, 3).map((category) => (
                         <Badge
-                          key={section.id}
+                          key={category.id}
                           variant="outline"
                           className="text-xs hover:bg-purple-50 hover:border-purple-300 transition-colors cursor-pointer"
-                        // asChild
                         >
-                          <Link href={`/products/${section.slug}`}>
-                            {section.name}
+                          <Link href={`/products?category=${category.slug}`}>
+                            {category.title}
                           </Link>
                         </Badge>
                       ))}
-                      {product.sections.length > 3 && (
+                      {product.categories.length > 3 && (
                         <Badge
                           variant="outline"
                           className="text-xs bg-gray-100 hover:bg-gray-200 transition-colors cursor-help"
-                          title={`Also in: ${product.sections.slice(3).map(s => s.name).join(', ')}`}
+                          title={`Also in: ${product.categories.slice(3).map(s => s.title).join(', ')}`}
                         >
-                          +{product.sections.length - 3}
+                          +{product.categories.length - 3}
                         </Badge>
                       )}
                     </div>
@@ -282,7 +266,6 @@ export function ProductGrid({
 
   return (
     <div className="space-y-6">
-      {/* Header with controls */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center space-x-4">
           <span className="text-sm text-gray-600">
@@ -323,12 +306,10 @@ export function ProductGrid({
         </div>
       </div>
 
-      {/* Products */}
       {products?.length > 0 ? (
         <>
           {viewMode === 'grid' ? renderGridView() : renderListView()}
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex justify-center mt-8">
               <Pagination>

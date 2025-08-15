@@ -6,14 +6,16 @@ import Order from '@/models/Order';
 import ContactForm from '@/models/ContactForm';
 import Bundle from '@/models/Bundle';
 import HeroSlide from '@/models/HeroSlide';
+import Category from '@/models/Category';
 
 // Export all models to ensure they're registered
 export {
-  Product,
-  Section,
-  User,
-  Order,
-  ContactForm,
-  Bundle,
-  HeroSlide,
+	Product,
+	Section,
+	User,
+	Order,
+	ContactForm,
+	Bundle,
+	HeroSlide,
+	Category,
 };

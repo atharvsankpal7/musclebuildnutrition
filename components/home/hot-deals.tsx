@@ -129,15 +129,6 @@ export function HotDeals() {
                       </div>
                     </div>
                     
-                    {/* Star Rating */}
-                    <div className="flex justify-center space-x-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className="w-4 h-4 text-gray-300 fill-current"
-                        />
-                      ))}
-                    </div>
                   </div>
                 </div>
               </Link>

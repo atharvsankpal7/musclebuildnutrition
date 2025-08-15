@@ -2,6 +2,7 @@
 
 import connectDB from '@/lib/mongodb';
 import { Bundle, Product, Section, HeroSlide } from '@/lib/models';
+import Category from '@/models/Category';
 import ContactSettings from '@/models/ContactSettings';
 import SocialMedia from '@/models/SocialMedia';
 import FooterLinks from '@/models/FooterLinks';
@@ -213,7 +214,7 @@ export async function getAllProducts(page = 1, sort = 'newest', priceRange?: str
       .sort(sortQuery)
       .skip(skip)
       .limit(limit)
-      .populate('sectionIds', 'name slug'),
+      .populate('categoryIds', 'title slug'),
     Product.countDocuments(query)
   ]);
 
@@ -225,10 +226,10 @@ export async function getAllProducts(page = 1, sort = 'newest', priceRange?: str
     originalPrice: product.originalPrice,
     discountPrice: product.discountPrice,
     isFeatured: product.isFeatured,
-    sections: product.sectionIds.map((section: any) => ({
-      id: section._id.toString(),
-      name: section.name,
-      slug: section.slug,
+    categories: (product.categoryIds || []).map((cat: any) => ({
+      id: cat._id.toString(),
+      title: cat.title,
+      slug: cat.slug,
     })),
   }));
 
@@ -341,24 +342,36 @@ export async function getHeroSlideById(slideId: string): Promise<HeroSlideType |
 export async function getHeaderData() {
   try {
     await connectDB();
-
-    const contactSettings = await ContactSettings.findOne().lean();
-    if (!contactSettings || Array.isArray(contactSettings)) {
-      return {
-        phone: '+91 85303 28357',
-        whatsappNumber: '+918530328357'
-      };
-    }
-
+    
+    const settings = await ContactSettings.findOne().sort({ createdAt: -1 });
+    
     return {
-      phone: (contactSettings as any).phone || '+91 85303 28357',
-      whatsappNumber: (contactSettings as any).whatsappNumber || '+918530328357'
+      phone: settings?.phone || '+91-9657866181',
+      whatsappNumber: settings?.whatsappNumber || '+91-9657866181',
+      email: settings?.email || 'info@musclebuildnutrition.com',
+      address: settings?.address || 'Peth, Sangli Road, Musclebuild Nutrition Islampur, Opposite Rajarambapu Patil Bank',
+      workingHours: settings?.workingHours || 'Monday - Saturday: 9:00 AM - 8:00 PM',
+      socialMedia: {
+        facebook: settings?.socialMedia?.facebook || 'https://facebook.com/musclebuildnutrition',
+        instagram: settings?.socialMedia?.instagram || 'https://instagram.com/musclebuildnutrition',
+        twitter: settings?.socialMedia?.twitter || 'https://twitter.com/musclebuildnutrition',
+        youtube: settings?.socialMedia?.youtube || 'https://youtube.com/@musclebuildnutrition'
+      }
     };
   } catch (error) {
     console.error('Error fetching header data:', error);
     return {
-      phone: '+91 85303 28357',
-      whatsappNumber: '+918530328357'
+      phone: '+91-9657866181',
+      whatsappNumber: '+91-9657866181',
+      email: 'info@musclebuildnutrition.com',
+      address: 'Peth, Sangli Road, Musclebuild Nutrition Islampur, Opposite Rajarambapu Patil Bank',
+      workingHours: 'Monday - Saturday: 9:00 AM - 8:00 PM',
+      socialMedia: {
+        facebook: 'https://facebook.com/musclebuildnutrition',
+        instagram: 'https://instagram.com/musclebuildnutrition',
+        twitter: 'https://twitter.com/musclebuildnutrition',
+        youtube: 'https://youtube.com/@musclebuildnutrition'
+      }
     };
   }
 }
@@ -487,7 +500,7 @@ export async function getSectionProducts2(sectionId: string, page = 1, sort = 'n
       .sort(sortQuery)
       .skip(skip)
       .limit(limit)
-      .populate('sectionIds', 'name slug'),
+      .populate('categoryIds', 'title slug'),
     Product.countDocuments(query)
   ]);
 
@@ -499,10 +512,10 @@ export async function getSectionProducts2(sectionId: string, page = 1, sort = 'n
     originalPrice: product.originalPrice,
     discountPrice: product.discountPrice,
     isFeatured: product.isFeatured,
-    sections: product.sectionIds.map((section: any) => ({
-      id: section.id.toString(),
-      name: section.name,
-      slug: section.slug,
+    categories: (product.categoryIds || []).map((cat: any) => ({
+      id: cat.id.toString(),
+      title: cat.title,
+      slug: cat.slug,
     })),
   }));
 

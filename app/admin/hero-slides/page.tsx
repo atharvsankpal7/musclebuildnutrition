@@ -49,6 +49,8 @@ import { HeroSlidePreview } from "@/components/admin/hero-slide-preview"
 import { ImageUpload } from "@/components/admin/image-upload"
 import { HeroSlideSetupGuide } from "@/components/admin/hero-slide-setup-guide"
 
+export const dynamic = 'force-dynamic';
+
 interface HeroSlide {
   id: string;
   title: string;
@@ -86,8 +88,11 @@ const initialFormData: SlideFormData = {
 };
 
 export default function HeroSlidesAdmin() {
-  const { data: session, status } = useSession()
+  // Only use session hook if we're on the client side
+  const sessionHook = typeof window !== 'undefined' ? useSession() : { data: null, status: 'loading' };
+  const { data: session, status } = sessionHook;
   const router = useRouter()
+  const [mounted, setMounted] = useState(false)
   const [slides, setSlides] = useState<HeroSlide[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -97,7 +102,11 @@ export default function HeroSlidesAdmin() {
   const [showSetupGuide, setShowSetupGuide] = useState(false)
 
   useEffect(() => {
-    if (status === "loading") return
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || status === "loading") return
 
     if (!session?.user?.isAdmin) {
       router.push("/admin/login")
@@ -105,7 +114,7 @@ export default function HeroSlidesAdmin() {
     }
 
     fetchSlides()
-  }, [session, status, router])
+  }, [session, status, router, mounted])
 
   const fetchSlides = async () => {
     try {
