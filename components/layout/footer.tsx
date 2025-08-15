@@ -29,24 +29,6 @@ export function Footer() {
             </div>
 
             <p className="text-gray-800 text-sm mb-4">KNOW BETTER, LIVE BETTER</p>
-
-            {/* Newsletter */}
-            <div>
-              <h3 className="text-gray-800 font-medium mb-2 text-sm">
-                Stay Updated With Our Newsletter
-              </h3>
-
-              <div className="flex gap-2 mb-3">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-                />
-                <button className="bg-black text-white px-4 py-2 rounded text-sm font-medium hover:bg-gray-800 transition-colors">
-                  Subscribe
-                </button>
-              </div>
-            </div>
           </div>
 
           {/* Quick Links */}
@@ -56,7 +38,6 @@ export function Footer() {
               <li><Link href="#" className="hover:text-gray-800">About Us</Link></li>
               <li><Link href="#" className="hover:text-gray-800">Products</Link></li>
               <li><Link href="#" className="hover:text-gray-800">Contact</Link></li>
-              <li><Link href="#" className="hover:text-gray-800">Blog</Link></li>
             </ul>
           </div>
 
@@ -64,10 +45,6 @@ export function Footer() {
           <div className="space-y-4">
             <h4 className="font-semibold text-gray-800">Support</h4>
             <ul className="space-y-2 text-sm text-gray-600">
-              <li><Link href="#" className="hover:text-gray-800">Track Order</Link></li>
-              <li><Link href="#" className="hover:text-gray-800">Returns</Link></li>
-              <li><Link href="#" className="hover:text-gray-800">Shipping Info</Link></li>
-              <li><Link href="#" className="hover:text-gray-800">Help Center</Link></li>
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-red-600" />
                 <a href="mailto:Musclebuildnutrition55@gmail.com" className="hover:text-gray-800">
