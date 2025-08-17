@@ -8,31 +8,21 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 
-export const dynamic = 'force-dynamic';
-
 export default function AdminLogin() {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const router = useRouter();
-  
-  // Only use session hook if we're on the client side
-  const sessionHook = typeof window !== 'undefined' ? useSession() : { data: null, status: 'loading' };
-  const { data: session, status } = sessionHook;
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const { data: session, status } = useSession();
 
   // Redirect if already logged in as admin
   useEffect(() => {
-    if (mounted && status === 'authenticated' && session?.user?.isAdmin) {
+    if (status === 'authenticated' && session?.user?.isAdmin) {
       router.push('/admin');
     }
-  }, [session, status, router, mounted]);
+  }, [session, status, router]);
 
-  // Show loading while checking authentication status or not mounted
-  if (!mounted || status === 'loading') {
+  // Show loading while checking authentication status
+  if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center space-y-4">

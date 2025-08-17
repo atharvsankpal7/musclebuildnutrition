@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BundlePurchaseModal } from '@/components/bundles/bundle-purchase-modal';
-import { Package, ArrowLeft, ShoppingCart, Star } from 'lucide-react';
+import { Package, ArrowLeft, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
