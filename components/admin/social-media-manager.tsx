@@ -195,6 +195,7 @@ export function SocialMediaManager() {
         </Dialog>
       </div>
 
+
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="social-media">
           {(provided: DroppableProvided) => (
