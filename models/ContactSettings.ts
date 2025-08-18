@@ -9,12 +9,12 @@ const ContactSettingsSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    default: 'Musclebuildnutrition55@gmail.com'
+    default: 'admin@musclebuildnutrition.co.in'
   },
   address: {
     type: String,
     required: true,
-    default: '123 Design Street, Mumbai'
+    default: 'Peth, Sangli Road, Musclebuild Nutrition Islampur, Opposite Rajarambapu Patil Bank'
   },
   workingHours: {
     monday: { type: String, default: '9:00 AM - 6:00 PM' },
@@ -33,6 +33,12 @@ const ContactSettingsSchema = new mongoose.Schema({
     type: String,
     required: true,
     default: '+919657866181'
+  },
+  socialMedia: {
+    facebook: { type: String, default: 'https://facebook.com/musclebuildnutrition' },
+    instagram: { type: String, default: 'https://instagram.com/musclebuildnutrition' },
+    twitter: { type: String, default: 'https://twitter.com/musclebuildnutrition' },
+    youtube: { type: String, default: 'https://youtube.com/@musclebuildnutrition' }
   }
 }, {
   timestamps: true

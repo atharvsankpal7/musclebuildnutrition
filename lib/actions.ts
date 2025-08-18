@@ -378,7 +378,7 @@ export async function getHeaderData() {
   try {
     await connectDB();
 
-    const settings = await ContactSettings.findOne().sort({ createdAt: -1 }).lean();
+    const settings = await ContactSettings.findOne().sort({ createdAt: -1 }).lean() as any;
 
     return {
       phone: settings?.phone || '+91-9657866181',
@@ -566,26 +566,26 @@ export async function getSectionProducts2(sectionId: string, page = 1, sort = 'n
 export async function getContactSettings() {
   try {
     await connectDB();
-    let settings = await ContactSettings.findOne().lean();
+    let settings = await ContactSettings.findOne().lean() as any;
 
     if (!settings) {
       settings = await ContactSettings.create({});
     }
 
     return {
-      email: settings.email || 'ssbusiness7733@gmail.com',
-      phone: settings.phone || '+91 85303 28357',
-      address: settings.address || 'Peth, Sangli Road, SS CREATION Islampur, Opposite Rajarambapu Patil Bank',
-      whatsappNumber: settings.whatsappNumber || '91 85303 28357'
+      email: settings?.email || 'admin@musclebuildnutrition.co.in',
+      phone: settings?.phone || '+91-9657866181',
+      address: settings?.address || 'Peth, Sangli Road, Musclebuild Nutrition Islampur, Opposite Rajarambapu Patil Bank',
+      whatsappNumber: settings?.whatsappNumber || '+91-9657866181'
     };
   } catch (error) {
     console.error('Error fetching contact settings:', error);
     // Return fallback values
     return {
-      email: 'ssbusiness7733@gmail.com',
-      phone: '++91 85303 28357',
-      address: 'Peth, Sangli Road, SS CREATION Islampur, Opposite Rajarambapu Patil Bank',
-      whatsappNumber: '+91 85303 28357'
+      email: 'admin@musclebuildnutrition.co.in',
+      phone: '+91-9657866181',
+      address: 'Peth, Sangli Road, Musclebuild Nutrition Islampur, Opposite Rajarambapu Patil Bank',
+      whatsappNumber: '+91-9657866181'
     };
   }
 }
