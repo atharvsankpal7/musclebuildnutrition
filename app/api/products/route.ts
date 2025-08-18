@@ -6,7 +6,7 @@ import Category from '@/models/Category';
 export async function GET() {
   try {
     await connectDB();
-    
+
     const products = await Product.find({ isActive: true })
       .populate({
         path: 'categoryIds',
@@ -46,9 +46,9 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     await connectDB();
-    
+
     const body = await request.json();
-    
+
     const {
       title,
       description,
@@ -58,7 +58,8 @@ export async function POST(request: NextRequest) {
       displayImage,
       productFiles,
       isFeatured,
-      isActive
+      isActive,
+      isHotDeal
     } = body;
 
     if (!title || !description || !originalPrice || !categoryIds || !displayImage) {
@@ -92,7 +93,8 @@ export async function POST(request: NextRequest) {
       displayImage,
       productFiles: productFiles || [],
       isFeatured: isFeatured || false,
-      isActive: isActive !== undefined ? isActive : true
+      isActive: isActive !== undefined ? isActive : true,
+      isHotDeal: isHotDeal || false
     });
 
     await product.save();

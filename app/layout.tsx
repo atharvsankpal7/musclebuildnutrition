@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: 'Muscle Build Nutrition | Premium Supplements & Fitness Solutions',
   description: 'Discover premium quality supplements for muscle building, weight loss, energy, and overall fitness. Expert nutrition guidance and WhatsApp inquiry available.',
   keywords: 'Muscle Build Nutrition, premium supplements, muscle building, weight loss, fitness supplements, nutrition, WhatsApp inquiry',
+  viewport: 'width=device-width, initial-scale=1',
 };
 
 export default function RootLayout({
@@ -21,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <NewHeaderServer />
-        <main className="pt-24">
+        <main className="pt-16 sm:pt-20 md:pt-24">
           {children}
         </main>
         <Footer />

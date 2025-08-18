@@ -41,34 +41,34 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   const sort = searchParams.sort || 'newest';
   const priceRange = searchParams.priceRange;
   const sectionName = searchParams.section;
-  
+
   const productData = await getAllProducts(page, sort, priceRange, sectionName);
-  
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <SEOHead 
+      <SEOHead
         title="All Products - Musclebuild Nutrition | Premium Fitness & Nutrition Products"
         description="Browse Musclebuild Nutrition's complete collection of premium fitness and nutrition products. Find supplements for muscle building, weight management, and overall health."
         keywords="musclebuild nutrition, fitness products, nutrition supplements, muscle building, weight management, health supplements"
       />
-      
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+
+      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
             All Products
           </h1>
-          <p className="text-lg text-gray-600 max-w-3xl">
+          <p className="text-base sm:text-lg text-gray-600 max-w-3xl">
             Discover our complete collection of premium fitness and nutrition products.
           </p>
         </div>
-        
-        <div className="flex flex-col lg:flex-row gap-8">
+
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
           <aside className="lg:w-64 flex-shrink-0">
             <AllProductsSidebar />
           </aside>
-          
+
           <div className="flex-1">
-            <ProductGrid 
+            <ProductGrid
               {...productData}
               sort={sort}
               priceRange={priceRange}
@@ -77,7 +77,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
           </div>
         </div>
       </main>
-      
+
     </div>
   );
 }

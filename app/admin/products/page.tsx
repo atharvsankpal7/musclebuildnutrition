@@ -45,6 +45,7 @@ interface Product {
   productFiles: string[];
   isFeatured: boolean;
   isActive: boolean;
+  isHotDeal: boolean;
   categories: ProductCategory[];
 }
 
@@ -93,6 +94,7 @@ export default function AdminProducts() {
     productFiles: [] as string[],
     isFeatured: false,
     isActive: true,
+    isHotDeal: false,
   });
   const [uploading, setUploading] = useState(false);
   const [newFileUrl, setNewFileUrl] = useState("");
@@ -191,6 +193,7 @@ export default function AdminProducts() {
         productFiles: validProductFiles,
         isFeatured: formData.isFeatured,
         isActive: formData.isActive,
+        isHotDeal: formData.isHotDeal,
       };
 
       const url = editingProduct
@@ -232,6 +235,7 @@ export default function AdminProducts() {
       productFiles: product.productFiles || [],
       isFeatured: product.isFeatured,
       isActive: product.isActive,
+      isHotDeal: product.isHotDeal,
     });
     setIsModalOpen(true);
   };
@@ -266,6 +270,7 @@ export default function AdminProducts() {
       productFiles: [],
       isFeatured: false,
       isActive: true,
+      isHotDeal: false,
     });
     setNewFileUrl("");
     setEditingProduct(null);
@@ -464,14 +469,25 @@ export default function AdminProducts() {
                     />
                     <Label htmlFor="active">Active</Label>
                   </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="hotdeal"
+                      checked={formData.isHotDeal}
+                      onCheckedChange={(checked) =>
+                        setFormData({ ...formData, isHotDeal: checked })
+                      }
+                    />
+                    <Label htmlFor="hotdeal">Hot Deal</Label>
+                  </div>
                 </div>
 
                 <Button type="submit" disabled={uploading} className="w-full">
                   {uploading
                     ? "Uploading..."
                     : editingProduct
-                    ? "Update Product"
-                    : "Create Product"}
+                      ? "Update Product"
+                      : "Create Product"}
                 </Button>
               </form>
             </DialogContent>
@@ -498,6 +514,9 @@ export default function AdminProducts() {
                     <div className="absolute top-2 left-2 space-x-1">
                       {product.isFeatured && (
                         <Badge className="bg-yellow-500">Featured</Badge>
+                      )}
+                      {product.isHotDeal && (
+                        <Badge className="bg-red-500 text-white">Hot Deal</Badge>
                       )}
                       {!product.isActive && (
                         <Badge variant="destructive">Inactive</Badge>
@@ -549,11 +568,10 @@ export default function AdminProducts() {
                         </span>
                       )}
                       <span
-                        className={`${
-                          product.discountPrice
-                            ? "line-through text-gray-500 ml-2"
-                            : "text-lg font-bold"
-                        }`}
+                        className={`${product.discountPrice
+                          ? "line-through text-gray-500 ml-2"
+                          : "text-lg font-bold"
+                          }`}
                       >
                         ₹{product.originalPrice}
                       </span>

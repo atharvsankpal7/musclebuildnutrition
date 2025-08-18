@@ -53,25 +53,27 @@ export function ClientHeader({ navigationSections, headerData }: ClientHeaderPro
   );
 
   return (
-    <motion.div 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200' : 'bg-white'
-      }`}
+    <motion.div
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200' : 'bg-white'
+        }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-3 sm:px-4">
         {/* Top Bar: Logo | Search | Contact */}
-        <div className="flex items-center justify-between py-3 gap-4">
+        <div className="flex items-center justify-between py-2 sm:py-3 gap-2 sm:gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-red-600 to-red-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">M</span>
+          <Link href="/" className="flex items-center space-x-1.5 sm:space-x-2">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-red-600 to-red-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm sm:text-lg">M</span>
             </div>
-            <div>
-              <div className="font-bold text-xl text-red-600">Muscle Build</div>
-              <div className="text-sm text-red-600">Nutrition</div>
+            <div className="hidden sm:block">
+              <div className="font-bold text-lg sm:text-xl text-red-600">Muscle Build</div>
+              <div className="text-xs sm:text-sm text-red-600">Nutrition</div>
+            </div>
+            <div className="block sm:hidden">
+              <div className="font-bold text-base text-red-600">Muscle Build</div>
             </div>
           </Link>
 
@@ -81,7 +83,7 @@ export function ClientHeader({ navigationSections, headerData }: ClientHeaderPro
           </div>
 
           {/* Contact number (desktop) */}
-          <div className="hidden md:flex items-center">
+          <div className="hidden lg:flex items-center">
             <a
               href={`tel:${headerData.phone.replace(/\s/g, '')}`}
               className="flex items-center text-red-600 hover:text-red-700 transition-colors duration-300 font-medium"
@@ -94,9 +96,9 @@ export function ClientHeader({ navigationSections, headerData }: ClientHeaderPro
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-gray-600 hover:text-red-600 transition-colors duration-300"
+            className="md:hidden p-1.5 sm:p-2 text-gray-600 hover:text-red-600 transition-colors duration-300"
           >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isMenuOpen ? <X className="h-5 w-5 sm:h-6 sm:w-6" /> : <Menu className="h-5 w-5 sm:h-6 sm:w-6" />}
           </button>
         </div>
 
@@ -113,22 +115,19 @@ export function ClientHeader({ navigationSections, headerData }: ClientHeaderPro
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`relative flex items-center gap-2 font-medium py-1 text-sm transition-colors ${
-                    isActivePage(link.href) ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
-                  }`}
+                  className={`relative flex items-center gap-2 font-medium py-1 text-sm transition-colors ${isActivePage(link.href) ? 'text-red-600' : 'text-gray-700 hover:text-red-600'
+                    }`}
                 >
                   {/* Red little box indicator */}
                   <span
-                    className={`h-3 w-3 rounded-sm bg-red-500 transition-transform ${
-                      isActivePage(link.href) ? 'scale-100' : 'scale-0 group-hover:scale-100'
-                    }`}
+                    className={`h-3 w-3 rounded-sm bg-red-500 transition-transform ${isActivePage(link.href) ? 'scale-100' : 'scale-0 group-hover:scale-100'
+                      }`}
                   />
                   <span className="relative">
                     {link.label}
                     <span
-                      className={`absolute bottom-0 left-0 h-0.5 bg-red-500 transition-all ${
-                        isActivePage(link.href) ? 'w-full' : 'w-0 group-hover:w-full'
-                      }`}
+                      className={`absolute bottom-0 left-0 h-0.5 bg-red-500 transition-all ${isActivePage(link.href) ? 'w-full' : 'w-0 group-hover:w-full'
+                        }`}
                     />
                   </span>
                 </Link>
@@ -156,15 +155,15 @@ export function ClientHeader({ navigationSections, headerData }: ClientHeaderPro
 
         {/* Mobile menu */}
         {isMenuOpen && (
-          <motion.div 
-            className="md:hidden py-4 border-t border-gray-100"
+          <motion.div
+            className="md:hidden py-3 sm:py-4 border-t border-gray-100"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
           >
             {/* Mobile Search */}
-            <div className="mb-4">
+            <div className="mb-3 sm:mb-4">
               <SearchDropdown className="w-full" onResultClick={() => setIsMenuOpen(false)} />
             </div>
 
@@ -178,9 +177,8 @@ export function ClientHeader({ navigationSections, headerData }: ClientHeaderPro
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-sm font-medium py-2 px-3 rounded-lg transition-colors ${
-                    isActivePage(link.href) ? 'text-red-600 bg-red-50' : 'text-gray-700 hover:text-red-600 hover:bg-red-50'
-                  }`}
+                  className={`text-sm font-medium py-2 px-3 rounded-lg transition-colors ${isActivePage(link.href) ? 'text-red-600 bg-red-50' : 'text-gray-700 hover:text-red-600 hover:bg-red-50'
+                    }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {link.label}

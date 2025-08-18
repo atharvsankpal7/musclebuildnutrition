@@ -10,6 +10,7 @@ export interface IProduct extends Document {
   productFiles: string[];
   isFeatured: boolean;
   isActive: boolean;
+  isHotDeal: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -55,6 +56,10 @@ const ProductSchema = new Schema<IProduct>({
   isActive: {
     type: Boolean,
     default: true,
+  },
+  isHotDeal: {
+    type: Boolean,
+    default: false,
   },
 }, {
   timestamps: true,

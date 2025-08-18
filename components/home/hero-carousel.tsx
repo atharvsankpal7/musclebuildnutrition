@@ -64,7 +64,7 @@ export function HeroCarousel() {
   };
 
   return (
-         <div className="relative w-full h-[350px] overflow-hidden bg-gradient-to-r from-orange-50 to-blue-50">
+    <div className="relative w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] overflow-hidden bg-gradient-to-r from-orange-50 to-blue-50">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentSlide}
@@ -81,37 +81,37 @@ export function HeroCarousel() {
             className="object-cover"
             priority
           />
-          
+
           {/* Overlay Content */}
-          <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-            <div className="text-center text-white z-10">
-                             <motion.h1
-                 initial={{ y: 20, opacity: 0 }}
-                 animate={{ y: 0, opacity: 1 }}
-                 transition={{ delay: 0.2 }}
-                 className="text-3xl md:text-4xl font-bold mb-3"
-               >
-                 {heroSlides[currentSlide].title}
-               </motion.h1>
+          <div className="absolute inset-0 bg-black/20 flex items-center justify-center px-4">
+            <div className="text-center text-white z-10 max-w-4xl mx-auto">
+              <motion.h1
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3"
+              >
+                {heroSlides[currentSlide].title}
+              </motion.h1>
               {heroSlides[currentSlide].subtitle && (
-                                 <motion.p
-                   initial={{ y: 20, opacity: 0 }}
-                   animate={{ y: 0, opacity: 1 }}
-                   transition={{ delay: 0.4 }}
-                   className="text-lg md:text-xl mb-4"
-                 >
-                   {heroSlides[currentSlide].subtitle}
-                 </motion.p>
+                <motion.p
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-sm sm:text-base md:text-lg lg:text-xl mb-3 sm:mb-4"
+                >
+                  {heroSlides[currentSlide].subtitle}
+                </motion.p>
               )}
               {heroSlides[currentSlide].ctaText && (
-                                 <motion.button
-                   initial={{ y: 20, opacity: 0 }}
-                   animate={{ y: 0, opacity: 1 }}
-                   transition={{ delay: 0.6 }}
-                   className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg text-base font-semibold transition-colors"
-                 >
-                   {heroSlides[currentSlide].ctaText}
-                 </motion.button>
+                <motion.button
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.6 }}
+                  className="bg-red-600 hover:bg-red-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition-colors"
+                >
+                  {heroSlides[currentSlide].ctaText}
+                </motion.button>
               )}
             </div>
           </div>
@@ -124,11 +124,10 @@ export function HeroCarousel() {
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentSlide
-                ? 'bg-white scale-125'
-                : 'bg-white/50 hover:bg-white/75'
-            }`}
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentSlide
+              ? 'bg-white scale-125'
+              : 'bg-white/50 hover:bg-white/75'
+              }`}
           />
         ))}
       </div>
@@ -136,18 +135,18 @@ export function HeroCarousel() {
       {/* Left/Right Navigation Arrows */}
       <button
         onClick={() => goToSlide((currentSlide - 1 + heroSlides.length) % heroSlides.length)}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-2 rounded-full transition-colors"
+        className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-1.5 sm:p-2 rounded-full transition-colors"
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
       </button>
-      
+
       <button
         onClick={() => goToSlide((currentSlide + 1) % heroSlides.length)}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-2 rounded-full transition-colors"
+        className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-1.5 sm:p-2 rounded-full transition-colors"
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
       </button>

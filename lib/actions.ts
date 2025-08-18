@@ -18,6 +18,7 @@ interface ProductType {
   originalPrice: number;
   discountPrice?: number;
   isFeatured: boolean;
+  isHotDeal?: boolean;
   createdAt: string;
 }
 
@@ -41,6 +42,7 @@ export const getNewProducts =
         originalPrice: product.originalPrice,
         discountPrice: product.discountPrice,
         isFeatured: product.isFeatured,
+        isHotDeal: product.isHotDeal,
         createdAt: product.createdAt.toISOString(),
       }));
 
@@ -70,6 +72,7 @@ export const getProductById = async (
       originalPrice: product.originalPrice,
       discountPrice: product.discountPrice,
       isFeatured: product.isFeatured,
+      isHotDeal: product.isHotDeal,
       createdAt: product.createdAt.toISOString(),
     };
   } catch (error: any) {
@@ -96,12 +99,43 @@ export async function getFeaturedProducts(): Promise<ProductType[]> {
       originalPrice: product.originalPrice,
       discountPrice: product.discountPrice,
       isFeatured: product.isFeatured,
+      isHotDeal: product.isHotDeal,
       createdAt: product.createdAt.toISOString(),
     }))
 
     return transformedProducts
   } catch (error: any) {
     console.error("Error fetching featured products:", error)
+    return []
+  }
+}
+
+export async function getHotDealProducts(): Promise<ProductType[]> {
+  try {
+    await connectDB()
+
+    const products = await Product.find({
+      isActive: true,
+      isHotDeal: true,
+    })
+      .sort({ createdAt: -1 })
+      .limit(5)
+
+    const transformedProducts = products.map((product) => ({
+      id: product._id.toString(),
+      title: product.title,
+      description: product.description,
+      displayImage: product.displayImage,
+      originalPrice: product.originalPrice,
+      discountPrice: product.discountPrice,
+      isFeatured: product.isFeatured,
+      isHotDeal: product.isHotDeal,
+      createdAt: product.createdAt.toISOString(),
+    }))
+
+    return transformedProducts
+  } catch (error: any) {
+    console.error("Error fetching hot deal products:", error)
     return []
   }
 }
@@ -260,6 +294,7 @@ export async function getSectionProducts(sectionId: string): Promise<ProductType
       originalPrice: product.originalPrice,
       discountPrice: product.discountPrice,
       isFeatured: product.isFeatured,
+      isHotDeal: product.isHotDeal,
       createdAt: product.createdAt.toISOString(),
     }))
 
@@ -342,9 +377,9 @@ export async function getHeroSlideById(slideId: string): Promise<HeroSlideType |
 export async function getHeaderData() {
   try {
     await connectDB();
-    
-    const settings = await ContactSettings.findOne().sort({ createdAt: -1 });
-    
+
+    const settings = await ContactSettings.findOne().sort({ createdAt: -1 }).lean();
+
     return {
       phone: settings?.phone || '+91-9657866181',
       whatsappNumber: settings?.whatsappNumber || '+91-9657866181',
@@ -512,6 +547,7 @@ export async function getSectionProducts2(sectionId: string, page = 1, sort = 'n
     originalPrice: product.originalPrice,
     discountPrice: product.discountPrice,
     isFeatured: product.isFeatured,
+    isHotDeal: product.isHotDeal,
     categories: (product.categoryIds || []).map((cat: any) => ({
       id: cat.id.toString(),
       title: cat.title,
@@ -530,7 +566,7 @@ export async function getSectionProducts2(sectionId: string, page = 1, sort = 'n
 export async function getContactSettings() {
   try {
     await connectDB();
-    let settings = await ContactSettings.findOne()
+    let settings = await ContactSettings.findOne().lean();
 
     if (!settings) {
       settings = await ContactSettings.create({});

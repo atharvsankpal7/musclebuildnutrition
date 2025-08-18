@@ -6,22 +6,22 @@ import { Mail, Leaf, Phone } from 'lucide-react';
 
 export function Footer() {
   return (
-    <footer className="bg-gray-100 py-8">
+    <footer className="bg-gray-100 py-6 sm:py-8">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
           {/* Brand Section */}
           <div className="md:col-span-1">
             {/* Logo and Brand */}
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-full flex items-center justify-center bg-transparent">
-  <Image
-    src="/logos/logo white.jpg"
-    alt="Logo"
-    width={40}
-    height={40}
-    className="rounded-full"
-  />
-</div>
+                <Image
+                  src="/logos/logo white.jpg"
+                  alt="Logo"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              </div>
               <div className="flex items-center gap-2">
                 <span className="text-red-600 text-lg font-bold">Musclebuild Nutrition</span>
                 <Leaf className="w-4 h-4 text-red-600" />

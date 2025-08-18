@@ -59,15 +59,15 @@ const fitnessGoals: FitnessGoal[] = [
 
 export function FitnessGoals() {
   return (
-    <section className="py-16 bg-white">
+    <section className="py-8 sm:py-12 md:py-16 bg-white">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8 sm:mb-12">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
+            className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4"
           >
             Choose Your Fitness Goal
           </motion.h2>
@@ -75,14 +75,14 @@ export function FitnessGoals() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg text-gray-600 max-w-2xl mx-auto"
+            className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4"
           >
             Discover personalized supplements and nutrition plans tailored to your specific fitness objectives
           </motion.p>
         </div>
 
         {/* Fitness Goals Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
           {fitnessGoals.map((goal, index) => (
             <motion.div
               key={goal.id}
@@ -93,30 +93,30 @@ export function FitnessGoals() {
               className="group"
             >
               <Link href={goal.link} className="block">
-                <div className="text-center p-4 rounded-xl hover:bg-gray-50 transition-all duration-300">
+                <div className="text-center p-2 sm:p-3 md:p-4 rounded-xl hover:bg-gray-50 transition-all duration-300">
                   {/* Icon Container */}
-                  <div className="relative mb-4 mx-auto">
-                    <div className="w-20 h-20 mx-auto relative group-hover:scale-110 transition-transform duration-300">
+                  <div className="relative mb-2 sm:mb-3 md:mb-4 mx-auto">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 mx-auto relative group-hover:scale-110 transition-transform duration-300">
                       <Image
                         src={goal.image}
                         alt={goal.name}
                         fill
                         className="object-contain"
-                        sizes="80px"
+                        sizes="(max-width: 640px) 48px, (max-width: 768px) 64px, 80px"
                       />
                     </div>
-                    
+
                     {/* Hover Effect Ring */}
                     <div className="absolute inset-0 rounded-full border-2 border-red-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
 
                   {/* Goal Name */}
-                  <h3 className="text-sm font-semibold text-gray-900 mb-2 group-hover:text-red-600 transition-colors duration-300">
+                  <h3 className="text-xs sm:text-sm font-semibold text-gray-900 mb-1 sm:mb-2 group-hover:text-red-600 transition-colors duration-300">
                     {goal.name}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-xs text-gray-500 leading-relaxed">
+                  <p className="text-xs text-gray-500 leading-relaxed hidden sm:block">
                     {goal.description}
                   </p>
                 </div>

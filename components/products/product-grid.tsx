@@ -25,6 +25,7 @@ interface Product {
   originalPrice: number;
   discountPrice?: number;
   isFeatured: boolean;
+  isHotDeal?: boolean;
   categories: ProductCategory[];
 }
 
@@ -78,7 +79,7 @@ export function ProductGrid({
   };
 
   const renderGridView = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
       {products.map((product) => (
         <Card key={product.id} className="group hover:shadow-lg transition-all duration-300 overflow-hidden">
           <div className="relative aspect-square overflow-hidden">
@@ -89,12 +90,19 @@ export function ProductGrid({
               className="object-contain group-hover:scale-105 transition-transform duration-300"
             />
 
-            {product.isFeatured && (
-              <Badge className="absolute top-2 left-2 bg-yellow-500 text-yellow-900">
-                <Star className="h-3 w-3 mr-1" />
-                Featured
-              </Badge>
-            )}
+            <div className="absolute top-2 left-2 flex flex-col gap-1">
+              {product.isFeatured && (
+                <Badge className="bg-yellow-500 text-yellow-900">
+                  <Star className="h-3 w-3 mr-1" />
+                  Featured
+                </Badge>
+              )}
+              {product.isHotDeal && (
+                <Badge className="bg-red-600 text-white">
+                  🔥 Hot Deal
+                </Badge>
+              )}
+            </div>
 
             {product.discountPrice && (
               <Badge className="absolute top-2 right-2 bg-red-500 text-white">
@@ -114,8 +122,8 @@ export function ProductGrid({
             </div>
           </div>
 
-          <CardContent className="p-4">
-            <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-purple-600 transition-colors">
+          <CardContent className="p-3 sm:p-4">
+            <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-purple-600 transition-colors text-sm sm:text-base">
               <Link href={`/products/${product.id}`}>
                 {product.title}
               </Link>
@@ -148,15 +156,15 @@ export function ProductGrid({
               <div className="flex items-center space-x-2">
                 {product.discountPrice ? (
                   <>
-                    <span className="text-lg font-bold text-green-600">
+                    <span className="text-base sm:text-lg font-bold text-green-600">
                       {formatPrice(product.discountPrice)}
                     </span>
-                    <span className="text-sm text-gray-500 line-through">
+                    <span className="text-xs sm:text-sm text-gray-500 line-through">
                       {formatPrice(product.originalPrice)}
                     </span>
                   </>
                 ) : (
-                  <span className="text-lg font-bold text-gray-900">
+                  <span className="text-base sm:text-lg font-bold text-gray-900">
                     {formatPrice(product.originalPrice)}
                   </span>
                 )}
@@ -182,12 +190,19 @@ export function ProductGrid({
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                 />
 
-                {product.isFeatured && (
-                  <Badge className="absolute top-1 left-1 bg-yellow-500 text-yellow-900 text-xs">
-                    <Star className="h-3 w-3 mr-1" />
-                    Featured
-                  </Badge>
-                )}
+                <div className="absolute top-1 left-1 flex flex-col gap-1">
+                  {product.isFeatured && (
+                    <Badge className="bg-yellow-500 text-yellow-900 text-xs">
+                      <Star className="h-3 w-3 mr-1" />
+                      Featured
+                    </Badge>
+                  )}
+                  {product.isHotDeal && (
+                    <Badge className="bg-red-600 text-white text-xs">
+                      🔥 Hot Deal
+                    </Badge>
+                  )}
+                </div>
               </div>
 
               <div className="flex-1">

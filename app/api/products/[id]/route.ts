@@ -9,7 +9,7 @@ export async function GET(
 ) {
   try {
     await connectDB();
-    
+
     const product = await Product.findById(params.id)
       .populate({
         path: 'categoryIds',
@@ -34,6 +34,7 @@ export async function GET(
       productFiles: product.productFiles,
       isFeatured: product.isFeatured,
       isActive: product.isActive,
+      isHotDeal: product.isHotDeal,
       categories: product.categoryIds.map((category: any) => ({
         id: category._id.toString(),
         title: category.title,
@@ -58,9 +59,9 @@ export async function PUT(
 ) {
   try {
     await connectDB();
-    
+
     const body = await request.json();
-    
+
     const {
       title,
       description,
@@ -70,7 +71,8 @@ export async function PUT(
       displayImage,
       productFiles,
       isFeatured,
-      isActive
+      isActive,
+      isHotDeal
     } = body;
 
     if (!title || !description || !originalPrice || !categoryIds || !displayImage) {
@@ -106,7 +108,8 @@ export async function PUT(
         displayImage,
         productFiles: productFiles || [],
         isFeatured: isFeatured || false,
-        isActive: isActive !== undefined ? isActive : true
+        isActive: isActive !== undefined ? isActive : true,
+        isHotDeal: isHotDeal || false
       },
       { new: true }
     );
@@ -136,7 +139,7 @@ export async function DELETE(
 ) {
   try {
     await connectDB();
-    
+
     const product = await Product.findByIdAndDelete(params.id);
 
     if (!product) {
