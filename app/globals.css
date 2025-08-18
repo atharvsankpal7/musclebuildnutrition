@@ -277,6 +277,39 @@
   -webkit-line-clamp: 3;
 }
 
+/* Scrollbar styles for horizontal scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom scrollbar for mobile */
+@media (max-width: 768px) {
+  .scrollbar-hide {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: block;
+    height: 4px;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar-track {
+    background: rgba(156, 163, 175, 0.1);
+    border-radius: 2px;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar-thumb {
+    background: rgba(156, 163, 175, 0.5);
+    border-radius: 2px;
+  }
+}
+
 /* Mobile-specific improvements */
 @media (max-width: 640px) {
 

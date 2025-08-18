@@ -50,14 +50,14 @@ export function InstagramSection() {
   ];
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-8 sm:py-12 md:py-16 bg-white">
       <div className="container mx-auto px-4">
         {/* Section Title */}
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-gray-900 mb-8 sm:mb-12"
         >
           Follow Us On Instagram
         </motion.h2>
@@ -67,18 +67,18 @@ export function InstagramSection() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-white rounded-2xl p-6 mb-12 max-w-4xl mx-auto"
+          className="bg-white rounded-2xl p-4 sm:p-6 mb-8 sm:mb-12 max-w-4xl mx-auto shadow-sm border border-gray-100"
         >
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
             {/* Profile Info */}
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
               {/* Profile Picture */}
               <div className="relative">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 p-1">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 p-1">
                   <div className="w-full h-full rounded-full bg-black flex items-center justify-center overflow-hidden">
                     <Image
-                      src="/logos/logo color.jpg" // make sure the path is correct
-                      alt="TechVerse Logo"
+                      src="/logos/logo color.jpg"
+                      alt="Musclebuild Nutrition Logo"
                       width={80}
                       height={80}
                       className="rounded-full object-cover"
@@ -87,28 +87,29 @@ export function InstagramSection() {
                 </div>
               </div>
 
-
               {/* Profile Details */}
-              <div className="flex items-center gap-2">
-                <h3 className="text-xl font-bold text-gray-900">MuscleBuild Nutrition</h3>
-                <Check className="w-5 h-5 text-blue-500" />
+              <div className="flex flex-col items-center sm:items-start">
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900">MuscleBuild Nutrition</h3>
+                  <Check className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
+                </div>
+                <p className="text-gray-600 text-sm sm:text-base">@musclebuild__nutrition</p>
               </div>
-              <p className="text-gray-600">@musclebuild__nutrition</p>
             </div>
 
             {/* Stats */}
-            <div className="flex gap-8 text-center">
+            <div className="flex gap-4 sm:gap-6 md:gap-8 text-center">
               <div>
-                <p className="text-2xl font-bold text-gray-900">5</p>
-                <p className="text-gray-600 text-sm">Posts</p>
+                <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">5</p>
+                <p className="text-gray-600 text-xs sm:text-sm">Posts</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">10</p>
-                <p className="text-gray-600 text-sm">Followers</p>
+                <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">10</p>
+                <p className="text-gray-600 text-xs sm:text-sm">Followers</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">14</p>
-                <p className="text-gray-600 text-sm">Following</p>
+                <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">14</p>
+                <p className="text-gray-600 text-xs sm:text-sm">Following</p>
               </div>
             </div>
 
@@ -117,9 +118,10 @@ export function InstagramSection() {
               href="https://www.instagram.com/musclebuild__nutrition?igsh=MWV5eDZxbmVrNXVoZw==&utm_source=ig_contact_invite"
               target="_blank"
               rel="noopener noreferrer"
+              className="w-full sm:w-auto"
             >
-              <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 transition-colors duration-300">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <button className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors duration-300 text-sm sm:text-base">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                 </svg>
                 Follow
@@ -136,37 +138,38 @@ export function InstagramSection() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="relative"
         >
-          {/* Navigation Arrows */}
-          <button className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-black text-white p-2 rounded-full shadow-lg hover:bg-gray-800 transition-colors duration-300">
+          {/* Navigation Arrows - Hidden on mobile */}
+          <button className="hidden lg:block absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-black text-white p-2 rounded-full shadow-lg hover:bg-gray-800 transition-colors duration-300">
             <ChevronLeft className="w-6 h-6" />
           </button>
 
-          <button className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-black text-white p-2 rounded-full shadow-lg hover:bg-gray-800 transition-colors duration-300">
+          <button className="hidden lg:block absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-black text-white p-2 rounded-full shadow-lg hover:bg-gray-800 transition-colors duration-300">
             <ChevronRight className="w-6 h-6" />
           </button>
 
           {/* Posts Container */}
-          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+          <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 scrollbar-hide lg:px-12">
             {instagramPosts.map((post, index) => (
               <motion.div
                 key={post.id}
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 * index }}
-                className="relative flex-shrink-0 w-80 h-80 group cursor-pointer"
+                className="relative flex-shrink-0 w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 group cursor-pointer"
               >
-                <div className="relative w-full h-full overflow-hidden">
+                <div className="relative w-full h-full overflow-hidden rounded-lg">
                   <Image
                     src={post.image}
                     alt={`Instagram post ${post.id}`}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    sizes="(max-width: 640px) 256px, (max-width: 768px) 288px, 320px"
                   />
 
                   {/* Video Indicator */}
                   {post.isVideo && (
-                    <div className="absolute top-3 right-3 bg-white/90 rounded-full p-1">
-                      <svg className="w-4 h-4 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
+                    <div className="absolute top-2 sm:top-3 right-2 sm:right-3 bg-white/90 rounded-full p-1">
+                      <svg className="w-3 h-3 sm:w-4 sm:h-4 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z" />
                       </svg>
                     </div>
@@ -174,24 +177,24 @@ export function InstagramSection() {
 
                   {/* Overlay with Engagement */}
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-end">
-                    <div className="p-4 w-full text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="p-3 sm:p-4 w-full text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       {/* Engagement Stats */}
-                      <div className="flex items-center gap-4 mb-3">
+                      <div className="flex items-center gap-3 sm:gap-4 mb-2 sm:mb-3">
                         <div className="flex items-center gap-1">
-                          <Heart className="w-4 h-4" />
-                          <span className="text-sm">{post.likes}</span>
+                          <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <span className="text-xs sm:text-sm">{post.likes}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <MessageCircle className="w-4 h-4" />
-                          <span className="text-sm">{post.comments}</span>
+                          <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <span className="text-xs sm:text-sm">{post.comments}</span>
                         </div>
                       </div>
 
                       {/* Hashtags */}
                       <div className="flex flex-wrap gap-1">
-                        {post.hashtags.slice(0, 3).map((tag, tagIndex) => (
-                          <span key={tagIndex} className="text-xs bg-white/20 px-2 py-1 rounded">
-                            {tag}
+                        {post.hashtags.slice(0, 2).map((tag, tagIndex) => (
+                          <span key={tagIndex} className="text-xs bg-white/20 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
+                            {tag.length > 15 ? `${tag.substring(0, 15)}...` : tag}
                           </span>
                         ))}
                       </div>
