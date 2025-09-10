@@ -12,7 +12,7 @@ export async function HomepageSections() {
   return (
     <>
       {homepageSections.map((section) => (
-        <SectionCarousel key={section.id} category={section} />
+        <SectionCarousel key={section.id} section={section} />
       ))}
     </>
   );

@@ -15,7 +15,7 @@ export interface IProduct extends Document {
   updatedAt: Date;
 }
 
-const ProductSchema = new Schema<IProduct>({
+const ProductSchema = new Schema<any>({
   title: {
     type: String,
     required: true,
@@ -65,4 +65,4 @@ const ProductSchema = new Schema<IProduct>({
   timestamps: true,
 });
 
-export default mongoose.models.Product || mongoose.model<IProduct>('Product', ProductSchema);
+export default mongoose.models.Product || mongoose.model<any>('Product', ProductSchema);
