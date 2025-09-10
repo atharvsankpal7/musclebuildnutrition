@@ -22,21 +22,21 @@ const fitnessGoals: FitnessGoal[] = [
     name: 'Musclebuild mass gainer',
     image: '/products/Musclebuild mass gainer.jpg',
     description: 'Gain strength and muscle mass',
-    link: '/products?goal=mass-gainer'
+    link: '/products?category=mass-gainer'
   },
   {
     id: 'pre-workout',
     name: 'Musclebuild Pre workout',
     image: '/products/Musclebuild Pre workout.jpg',
     description: 'Improve general health and wellness',
-    link: '/products?goal=pre-workout'
+    link: '/products?category=pre-workout'
   },
   {
     id: 'whey-protein',
     name: 'Musclebuild Wey Protein',
     image: '/products/Musclebuild whey protein.jpg',
     description: 'Boost stamina and performance',
-    link: '/products?goal=whey-protein'
+    link: '/products?category=whey-protein'
   }
 ];
 

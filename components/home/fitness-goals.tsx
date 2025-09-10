@@ -18,42 +18,42 @@ const fitnessGoals: FitnessGoal[] = [
     name: 'Build Muscle',
     image: '/fitness-goals/Build Muscle.png',
     description: 'Gain strength and muscle mass',
-    link: '/products?goal=muscle-building'
+    link: '/products?category=muscle-building'
   },
   {
     id: 'overall-fitness',
     name: 'Overall Fitness',
     image: '/fitness-goals/Overall Fitness.png',
     description: 'Improve general health and wellness',
-    link: '/products?goal=overall-fitness'
+    link: '/products?category=overall-fitness'
   },
   {
     id: 'energy-endurance',
     name: 'Energy & Endurance',
     image: '/fitness-goals/Energy & Endurance.png',
     description: 'Boost stamina and performance',
-    link: '/products?goal=energy-endurance'
+    link: '/products?category=energy-endurance'
   },
   {
     id: 'weight-loss',
     name: 'Weight Loss',
     image: '/fitness-goals/Reduce Weight.png',
     description: 'Achieve healthy weight goals',
-    link: '/products?goal=weight-loss'
+    link: '/products?category=weight-loss'
   },
   {
     id: 'weight-gain',
     name: 'Weight Gain',
     image: '/fitness-goals/Weight Gain.png',
     description: 'Healthy weight gain solutions',
-    link: '/products?goal=weight-gain'
+    link: '/products?category=weight-gain'
   },
   {
     id: 'immunity-boost',
     name: 'Immunity Boost',
     image: '/fitness-goals/Immunity Boost.png',
     description: 'Strengthen your immune system',
-    link: '/products?goal=immunity-boost'
+    link: '/products?category=immunity-boost'
   }
 ];
 
@@ -92,7 +92,7 @@ export function FitnessGoals() {
               whileHover={{ y: -5 }}
               className="group"
             >
-              <Link href={goal.link} className="block">
+              {/* <Link href={goal.link} className="block"> */}
                 <div className="text-center p-2 sm:p-3 md:p-4 rounded-xl hover:bg-gray-50 transition-all duration-300">
                   {/* Icon Container */}
                   <div className="relative mb-2 sm:mb-3 md:mb-4 mx-auto">
@@ -120,7 +120,7 @@ export function FitnessGoals() {
                     {goal.description}
                   </p>
                 </div>
-              </Link>
+              {/* </Link> */}
             </motion.div>
           ))}
         </div>

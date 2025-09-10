@@ -63,9 +63,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         </div>
 
         <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
-          <aside className="lg:w-64 flex-shrink-0">
-            <AllProductsSidebar />
-          </aside>
+      
 
           <div className="flex-1">
             <ProductGrid

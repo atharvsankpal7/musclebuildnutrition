@@ -14,7 +14,7 @@ export function SSRMobileNavigation({ sections, onLinkClick }: SSRMobileNavigati
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
 
   const buildSectionUrl = (section: SectionHierarchy): string => {
-    return `/products?section=${encodeURIComponent(section.name)}`;
+    return `/products?category=${encodeURIComponent(section.name)}`;
   };
 
   const toggleExpanded = (sectionId: string) => {

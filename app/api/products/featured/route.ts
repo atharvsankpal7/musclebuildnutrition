@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     
     const products = await Product.find({
       isActive: true,
-      isHotDeal: true,
+      isFeatured: true,
     })
       .sort({ createdAt: -1 })
       .limit(5);
@@ -21,7 +21,6 @@ export async function GET(request: NextRequest) {
       originalPrice: product.originalPrice,
       discountPrice: product.discountPrice,
       isFeatured: product.isFeatured,
-      isHotDeal: product.isHotDeal,
       createdAt: product.createdAt.toISOString(),
     }));
 

@@ -5,7 +5,7 @@ import Section from '../models/Section';
 import Product from '../models/Product';
 import ContactSettings from '../models/ContactSettings';
 
-async function seed() {
+export async function seed() {
   try {
     await connectDB();
 

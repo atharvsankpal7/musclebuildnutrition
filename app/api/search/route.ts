@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
       slug: category.slug,
       level: category.level,
       type: 'category',
-      url: `/products?section=${encodeURIComponent(category.name)}`,
+      url: `/products?category=${encodeURIComponent(category.name)}`,
     }));
 
     return NextResponse.json({

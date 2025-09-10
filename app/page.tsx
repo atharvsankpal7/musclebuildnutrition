@@ -5,6 +5,8 @@ import { FitnessGoals } from '@/components/home/fitness-goals';
 import { HotDeals } from '@/components/home/hot-deals';
 import { LatestReviews } from '@/components/home/latest-reviews';
 import { InstagramSection } from '@/components/home/instagram-section';
+import { seed } from '@/scripts/seed';
+import { ProductSlider } from '@/components/home/product-slider';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,7 +24,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
   return (
     <div className="min-h-screen">
       <HeroCarousel />

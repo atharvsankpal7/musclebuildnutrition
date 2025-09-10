@@ -105,10 +105,10 @@ async function seedContactData() {
         { name: 'Contact', url: '/contact', category: 'quick-links', order: 4, isActive: true },
 
         // Categories
-        { name: 'Festival Designs', url: '/products?section=Festival Designs', category: 'categories', order: 0, isActive: true },
+        { name: 'Festival Designs', url: '/products?category=Festival Designs', category: 'categories', order: 0, isActive: true },
         { name: 'Design Bundles', url: '/bundles', category: 'categories', order: 1, isActive: true },
-        { name: 'Business Cards', url: '/products?section=Business Templates', category: 'categories', order: 2, isActive: true },
-        { name: 'Social Media', url: '/products?section=Social Media', category: 'categories', order: 3, isActive: true },
+        { name: 'Business Cards', url: '/products?category=Business Templates', category: 'categories', order: 2, isActive: true },
+        { name: 'Social Media', url: '/products?category=Social Media', category: 'categories', order: 3, isActive: true },
 
         // Legal
         { name: 'Privacy Policy', url: '/privacy', category: 'legal', order: 0, isActive: true },
