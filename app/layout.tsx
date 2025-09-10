@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   description: 'Discover premium quality supplements for muscle building, weight loss, energy, and overall fitness. Expert nutrition guidance and WhatsApp inquiry available.',
   keywords: 'Muscle Build Nutrition, premium supplements, muscle building, weight loss, fitness supplements, nutrition, WhatsApp inquiry',
   viewport: 'width=device-width, initial-scale=1',
+  icons: {
+    icon: '/logo/favicon.ico',
+  },
 };
 
 export default function RootLayout({
