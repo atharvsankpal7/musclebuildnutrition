@@ -1,7 +1,8 @@
 // lib/actions/product.actions.ts
 
 import connectDB from '@/lib/mongodb';
-import { Bundle, Product, Section, HeroSlide } from '@/lib/models'; 
+import { Bundle, Product, Section, HeroSlide } from '@/lib/models';
+import Category from '@/models/Category';
 import ContactSettings from '@/models/ContactSettings';
 import SocialMedia from '@/models/SocialMedia';
 import FooterLinks from '@/models/FooterLinks';
@@ -17,10 +18,11 @@ interface ProductType {
   originalPrice: number;
   discountPrice?: number;
   isFeatured: boolean;
+  isHotDeal?: boolean;
   createdAt: string;
 }
 
-export const getNewProducts = 
+export const getNewProducts =
   async (): Promise<ProductType[]> => {
     try {
       await connectDB();
@@ -30,7 +32,7 @@ export const getNewProducts =
       })
         .sort({ createdAt: -1 })
         .limit(4)
-       
+
 
       const transformedProducts = products.map((product) => ({
         id: product._id.toString(),
@@ -40,6 +42,7 @@ export const getNewProducts =
         originalPrice: product.originalPrice,
         discountPrice: product.discountPrice,
         isFeatured: product.isFeatured,
+        isHotDeal: product.isHotDeal,
         createdAt: product.createdAt.toISOString(),
       }));
 
@@ -60,7 +63,7 @@ export const getProductById = async (
     await connectDB();
     const product = await Product.findById(productId);
     if (!product || Array.isArray(product)) return null;
-    
+
     return {
       id: product._id.toString(),
       title: product.title,
@@ -69,6 +72,7 @@ export const getProductById = async (
       originalPrice: product.originalPrice,
       discountPrice: product.discountPrice,
       isFeatured: product.isFeatured,
+      isHotDeal: product.isHotDeal,
       createdAt: product.createdAt.toISOString(),
     };
   } catch (error: any) {
@@ -77,147 +81,17 @@ export const getProductById = async (
   }
 };
 export async function getFeaturedProducts(): Promise<ProductType[]> {
-    try {
-      await connectDB()
-  
-      const products = await Product.find({
-        isActive: true,
-        isFeatured: true,
-      })
-        .sort({ createdAt: -1 })
-        .limit(8)
-  
-      const transformedProducts = products.map((product) => ({
-        id: product._id.toString(),
-        title: product.title,
-        description: product.description,
-        displayImage: product.displayImage,
-        originalPrice: product.originalPrice,
-        discountPrice: product.discountPrice,
-        isFeatured: product.isFeatured,
-        createdAt: product.createdAt.toISOString(),
-      }))
-  
-      return transformedProducts
-    } catch (error : any) {
-      console.error("Error fetching featured products:", error)
-      return []
-    }
-  }
+  try {
+    await connectDB()
 
-  interface Bundle {
-    id: string;
-    name: string;
-    description: string;
-    displayImage: string;
-    originalPrice: number;
-    discountPrice?: number;
-    products: {
-      id: string;
-      title: string;
-      displayImage?: string;
-      originalPrice?: number;
-      discountPrice?: number;
-    }[];
-  }
-  
-  
-  export async function getFeaturedBundles(): Promise<Bundle[]> {
-    try {
-      await connectDB();
-      
-      const bundles = await Bundle.find({
-        isActive: true,
-        isFeatured: true
-      })
-        .populate('products', 'title displayImage originalPrice discountPrice ')
-        .sort({ createdAt: -1 })
-        .limit(4)
-        // .lean();
-  
-      const transformedBundles = bundles.map(bundle => ({
-        id: bundle._id.toString(),
-        name: bundle.name,
-        description: bundle.description,
-        originalPrice: bundle.originalPrice,
-        discountPrice: bundle.discountPrice,
-        displayImage: bundle.displayImage,
-        products: bundle.products.map((product: any) => ({
-          id: product._id.toString(),
-          title: product.title,
-          displayImage: product.displayImage,
-          originalPrice: product.originalPrice,
-          discountPrice: product.discountPrice,
-        })),
-      }));
-  
-      return transformedBundles;
-    } catch (error : any) {
-      console.error("Error fetching featured bundles:", error);
-      return [];
-    }
-  }
-  
- export async function getAllProducts(page = 1, sort = 'newest', priceRange?: string, sectionName?: string) {
-    await connectDB();
-    
-    const limit = 12;
-    const skip = (page - 1) * limit;
-    
-    let query: any = {
+    const products = await Product.find({
       isActive: true,
-    };
-    
-    // Apply section filter
-    if (sectionName) {
-      const section = await Section.findOne({ 
-        name: { $regex: new RegExp(sectionName, 'i') },
-        isActive: true 
-      });
-      if (section) {
-        query.sectionIds = section._id;
-      }
-    }
-    
-    // Apply price range filter
-    if (priceRange) {
-      const [min, max] = priceRange.split('-').map(Number);
-      if (max) {
-        query.originalPrice = { $gte: min, $lte: max };
-      } else {
-        query.originalPrice = { $gte: min };
-      }
-    }
-    
-    // Apply sorting
-    let sortQuery: any = {};
-    switch (sort) {
-      case 'price-low':
-        sortQuery = { originalPrice: 1 };
-        break;
-      case 'price-high':
-        sortQuery = { originalPrice: -1 };
-        break;
-      case 'name':
-        sortQuery = { title: 1 };
-        break;
-      case 'featured':
-        sortQuery = { isFeatured: -1, createdAt: -1 };
-        break;
-      default:
-        sortQuery = { createdAt: -1 };
-    }
-    
-    const [products, totalCount] = await Promise.all([
-      Product.find(query)
-        .sort(sortQuery)
-        .skip(skip)
-        .limit(limit)
-        .populate('sectionIds', 'name slug'),
-      Product.countDocuments(query)
-    ]);
-    
-    const transformedProducts = products.map((product: any) => ({
+      isFeatured: true,
+    })
+      .sort({ createdAt: -1 })
+      .limit(8)
+
+    const transformedProducts = products.map((product) => ({
       id: product._id.toString(),
       title: product.title,
       description: product.description,
@@ -225,22 +99,183 @@ export async function getFeaturedProducts(): Promise<ProductType[]> {
       originalPrice: product.originalPrice,
       discountPrice: product.discountPrice,
       isFeatured: product.isFeatured,
-      sections: product.sectionIds.map((section: any) => ({
-        id: section._id.toString(),
-        name: section.name,
-        slug: section.slug,
+      isHotDeal: product.isHotDeal,
+      createdAt: product.createdAt.toISOString(),
+    }))
+
+    return transformedProducts
+  } catch (error: any) {
+    console.error("Error fetching featured products:", error)
+    return []
+  }
+}
+
+export async function getHotDealProducts(): Promise<ProductType[]> {
+  try {
+    await connectDB()
+
+    const products = await Product.find({
+      isActive: true,
+      isHotDeal: true,
+    })
+      .sort({ createdAt: -1 })
+      .limit(5)
+
+    const transformedProducts = products.map((product) => ({
+      id: product._id.toString(),
+      title: product.title,
+      description: product.description,
+      displayImage: product.displayImage,
+      originalPrice: product.originalPrice,
+      discountPrice: product.discountPrice,
+      isFeatured: product.isFeatured,
+      isHotDeal: product.isHotDeal,
+      createdAt: product.createdAt.toISOString(),
+    }))
+
+    return transformedProducts
+  } catch (error: any) {
+    console.error("Error fetching hot deal products:", error)
+    return []
+  }
+}
+
+interface Bundle {
+  id: string;
+  name: string;
+  description: string;
+  displayImage: string;
+  originalPrice: number;
+  discountPrice?: number;
+  products: {
+    id: string;
+    title: string;
+    displayImage?: string;
+    originalPrice?: number;
+    discountPrice?: number;
+  }[];
+}
+
+
+export async function getFeaturedBundles(): Promise<Bundle[]> {
+  try {
+    await connectDB();
+
+    const bundles = await Bundle.find({
+      isActive: true,
+      isFeatured: true
+    })
+      .populate('products', 'title displayImage originalPrice discountPrice ')
+      .sort({ createdAt: -1 })
+      .limit(4)
+    // .lean();
+
+    const transformedBundles = bundles.map(bundle => ({
+      id: bundle._id.toString(),
+      name: bundle.name,
+      description: bundle.description,
+      originalPrice: bundle.originalPrice,
+      discountPrice: bundle.discountPrice,
+      displayImage: bundle.displayImage,
+      products: bundle.products.map((product: any) => ({
+        id: product._id.toString(),
+        title: product.title,
+        displayImage: product.displayImage,
+        originalPrice: product.originalPrice,
+        discountPrice: product.discountPrice,
       })),
     }));
-    
-    return {
-      products: transformedProducts,
-      totalCount,
-      totalPages: Math.ceil(totalCount / limit),
-      currentPage: page,
-    };
+
+    return transformedBundles;
+  } catch (error: any) {
+    console.error("Error fetching featured bundles:", error);
+    return [];
+  }
+}
+
+export async function getAllProducts(page = 1, sort = 'newest', priceRange?: string, sectionName?: string) {
+  await connectDB();
+
+  const limit = 12;
+  const skip = (page - 1) * limit;
+
+  let query: any = {
+    isActive: true,
+  };
+
+  // Apply section filter
+  if (sectionName) {
+    const section = await Section.findOne({
+      name: { $regex: new RegExp(sectionName, 'i') },
+      isActive: true
+    });
+    if (section) {
+      query.sectionIds = section._id;
+    }
   }
 
-  
+  // Apply price range filter
+  if (priceRange) {
+    const [min, max] = priceRange.split('-').map(Number);
+    if (max) {
+      query.originalPrice = { $gte: min, $lte: max };
+    } else {
+      query.originalPrice = { $gte: min };
+    }
+  }
+
+  // Apply sorting
+  let sortQuery: any = {};
+  switch (sort) {
+    case 'price-low':
+      sortQuery = { originalPrice: 1 };
+      break;
+    case 'price-high':
+      sortQuery = { originalPrice: -1 };
+      break;
+    case 'name':
+      sortQuery = { title: 1 };
+      break;
+    case 'featured':
+      sortQuery = { isFeatured: -1, createdAt: -1 };
+      break;
+    default:
+      sortQuery = { createdAt: -1 };
+  }
+
+  const [products, totalCount] = await Promise.all([
+    Product.find(query)
+      .sort(sortQuery)
+      .skip(skip)
+      .limit(limit)
+      .populate('categoryIds', 'title slug'),
+    Product.countDocuments(query)
+  ]);
+
+  const transformedProducts = products.map((product: any) => ({
+    id: product._id.toString(),
+    title: product.title,
+    description: product.description,
+    displayImage: product.displayImage,
+    originalPrice: product.originalPrice,
+    discountPrice: product.discountPrice,
+    isFeatured: product.isFeatured,
+    categories: (product.categoryIds || []).map((cat: any) => ({
+      id: cat._id.toString(),
+      title: cat.title,
+      slug: cat.slug,
+    })),
+  }));
+
+  return {
+    products: transformedProducts,
+    totalCount,
+    totalPages: Math.ceil(totalCount / limit),
+    currentPage: page,
+  };
+}
+
+
 export async function getSectionProducts(sectionId: string): Promise<ProductType[]> {
   try {
     await connectDB()
@@ -259,11 +294,12 @@ export async function getSectionProducts(sectionId: string): Promise<ProductType
       originalPrice: product.originalPrice,
       discountPrice: product.discountPrice,
       isFeatured: product.isFeatured,
+      isHotDeal: product.isHotDeal,
       createdAt: product.createdAt.toISOString(),
     }))
 
     return transformedProducts
-  } catch (error : any) {
+  } catch (error: any) {
     console.error("Error fetching section products:", error)
     return []
   }
@@ -283,7 +319,7 @@ interface HeroSlideType {
 }
 
 // Get active hero slides for display
-export const getHeroSlides = 
+export const getHeroSlides =
   async (): Promise<HeroSlideType[]> => {
     try {
       await connectDB();
@@ -293,7 +329,7 @@ export const getHeroSlides =
       })
         .sort({ displayOrder: 1, createdAt: -1 })
         .lean();
-        
+
       const transformedSlides = slides.map((slide: any) => ({
         id: slide._id.toString(),
         title: slide.title,
@@ -318,7 +354,7 @@ export async function getHeroSlideById(slideId: string): Promise<HeroSlideType |
     await connectDB();
     const slide = await HeroSlide.findById(slideId).lean();
     if (!slide || Array.isArray(slide)) return null;
-    
+
     const typedSlide = slide as any;
     return {
       id: typedSlide._id.toString(),
@@ -341,24 +377,36 @@ export async function getHeroSlideById(slideId: string): Promise<HeroSlideType |
 export async function getHeaderData() {
   try {
     await connectDB();
-    
-    const contactSettings = await ContactSettings.findOne().lean();
-    if (!contactSettings || Array.isArray(contactSettings)) {
-      return {
-        phone: '+91 85303 28357',
-        whatsappNumber: '+918530328357'
-      };
-    }
-    
+
+    const settings = await ContactSettings.findOne().sort({ createdAt: -1 }).lean() as any;
+
     return {
-      phone: (contactSettings as any).phone || '+91 85303 28357',
-      whatsappNumber: (contactSettings as any).whatsappNumber || '+918530328357'
+      phone: settings?.phone || '+91-9657866181',
+      whatsappNumber: settings?.whatsappNumber || '+91-9657866181',
+      email: settings?.email || 'info@musclebuildnutrition.com',
+      address: settings?.address || 'Peth, Sangli Road, Musclebuild Nutrition Islampur, Opposite Rajarambapu Patil Bank',
+      workingHours: settings?.workingHours || 'Monday - Saturday: 9:00 AM - 8:00 PM',
+      socialMedia: {
+        facebook: settings?.socialMedia?.facebook || 'https://facebook.com/musclebuildnutrition',
+        instagram: settings?.socialMedia?.instagram || 'https://instagram.com/musclebuildnutrition',
+        twitter: settings?.socialMedia?.twitter || 'https://twitter.com/musclebuildnutrition',
+        youtube: settings?.socialMedia?.youtube || 'https://youtube.com/@musclebuildnutrition'
+      }
     };
   } catch (error) {
     console.error('Error fetching header data:', error);
     return {
-      phone: '+91 85303 28357',
-      whatsappNumber: '+918530328357'
+      phone: '+91-9657866181',
+      whatsappNumber: '+91-9657866181',
+      email: 'info@musclebuildnutrition.com',
+      address: 'Peth, Sangli Road, Musclebuild Nutrition Islampur, Opposite Rajarambapu Patil Bank',
+      workingHours: 'Monday - Saturday: 9:00 AM - 8:00 PM',
+      socialMedia: {
+        facebook: 'https://facebook.com/musclebuildnutrition',
+        instagram: 'https://instagram.com/musclebuildnutrition',
+        twitter: 'https://twitter.com/musclebuildnutrition',
+        youtube: 'https://youtube.com/@musclebuildnutrition'
+      }
     };
   }
 }
@@ -366,17 +414,17 @@ export async function getHeaderData() {
 export async function getContactData() {
   try {
     await connectDB();
-    
+
     let contactSettings = await ContactSettings.findOne().lean();
     if (!contactSettings) {
       contactSettings = await ContactSettings.create({});
     }
-    
-    const socialMedia = await SocialMedia.find({ 
-      isActive: true, 
-      showInContact: true 
+
+    const socialMedia = await SocialMedia.find({
+      isActive: true,
+      showInContact: true
     }).sort({ order: 1 }).lean();
-    
+
     return {
       contactSettings: JSON.parse(JSON.stringify(contactSettings)),
       socialMedia: JSON.parse(JSON.stringify(socialMedia))
@@ -385,8 +433,8 @@ export async function getContactData() {
     console.error('Error fetching contact data:', error);
     return {
       contactSettings: {
-        phone: '+91 98765 43210',
-        email: 'hello@sscreation.com',
+        phone: '+91 9657866181',
+        email: 'Musclebuildnutrition55@gmail.com',
         address: '123 Design Street, Mumbai',
         workingHours: {
           monday: '9:00 AM - 6:00 PM',
@@ -398,7 +446,7 @@ export async function getContactData() {
           sunday: 'Closed'
         },
         mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.715872126558!2d72.8245093153778!3d19.04346925793646!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c96a34dc4401%3A0x3ffc07e83942b13f!2s123%20Design%20Street%2C%20Mumbai%2C%20Maharashtra%20400001!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin',
-        whatsappNumber: '+919876543210'
+        whatsappNumber: '+919657866181'
       },
       socialMedia: []
     };
@@ -408,21 +456,21 @@ export async function getContactData() {
 export async function getFooterData() {
   try {
     await connectDB();
-    
+
     let contactSettings = await ContactSettings.findOne().lean();
     if (!contactSettings) {
       contactSettings = await ContactSettings.create({});
     }
-    
-    const socialMedia = await SocialMedia.find({ 
-      isActive: true, 
-      showInFooter: true 
+
+    const socialMedia = await SocialMedia.find({
+      isActive: true,
+      showInFooter: true
     }).sort({ order: 1 }).lean();
-    
-    const footerLinks = await FooterLinks.find({ 
-      isActive: true 
+
+    const footerLinks = await FooterLinks.find({
+      isActive: true
     }).sort({ category: 1, order: 1 }).lean();
-    
+
     return {
       contactSettings: JSON.parse(JSON.stringify(contactSettings)),
       socialMedia: JSON.parse(JSON.stringify(socialMedia)),
@@ -432,8 +480,8 @@ export async function getFooterData() {
     console.error('Error fetching footer data:', error);
     return {
       contactSettings: {
-        phone: '+91 98765 43210',
-        email: 'hello@sscreation.com',
+        phone: '+91 9657866181',
+        email: 'Musclebuildnutrition55@gmail.com',
         address: 'Mumbai, Maharashtra'
       },
       socialMedia: [],
@@ -444,15 +492,15 @@ export async function getFooterData() {
 
 export async function getSectionProducts2(sectionId: string, page = 1, sort = 'newest', priceRange?: string) {
   await connectDB();
-  
+
   const limit = 12;
   const skip = (page - 1) * limit;
-  
+
   let query: any = {
     isActive: true,
     sectionIds: sectionId,
   };
-  
+
   // Apply price range filter
   if (priceRange) {
     const [min, max] = priceRange.split('-').map(Number);
@@ -462,7 +510,7 @@ export async function getSectionProducts2(sectionId: string, page = 1, sort = 'n
       query.originalPrice = { $gte: min };
     }
   }
-  
+
   // Apply sorting
   let sortQuery: any = {};
   switch (sort) {
@@ -481,16 +529,16 @@ export async function getSectionProducts2(sectionId: string, page = 1, sort = 'n
     default:
       sortQuery = { createdAt: -1 };
   }
-  
+
   const [products, totalCount] = await Promise.all([
     Product.find(query)
       .sort(sortQuery)
       .skip(skip)
       .limit(limit)
-      .populate('sectionIds', 'name slug'),
+      .populate('categoryIds', 'title slug'),
     Product.countDocuments(query)
   ]);
-  
+
   const transformedProducts = products.map((product) => ({
     id: product.id.toString(),
     title: product.title,
@@ -499,13 +547,14 @@ export async function getSectionProducts2(sectionId: string, page = 1, sort = 'n
     originalPrice: product.originalPrice,
     discountPrice: product.discountPrice,
     isFeatured: product.isFeatured,
-    sections: product.sectionIds.map((section: any) => ({
-      id: section.id.toString(),
-      name: section.name,
-      slug: section.slug,
+    isHotDeal: product.isHotDeal,
+    categories: (product.categoryIds || []).map((cat: any) => ({
+      id: cat.id.toString(),
+      title: cat.title,
+      slug: cat.slug,
     })),
   }));
-  
+
   return {
     products: transformedProducts,
     totalCount,
@@ -517,26 +566,26 @@ export async function getSectionProducts2(sectionId: string, page = 1, sort = 'n
 export async function getContactSettings() {
   try {
     await connectDB();
-    let settings = await ContactSettings.findOne()
-    
+    let settings = await ContactSettings.findOne().lean() as any;
+
     if (!settings) {
       settings = await ContactSettings.create({});
     }
-    
+
     return {
-      email: settings.email || 'ssbusiness7733@gmail.com',
-      phone: settings.phone || '+91 85303 28357',
-      address: settings.address || 'Peth, Sangli Road, SS CREATION Islampur, Opposite Rajarambapu Patil Bank',
-      whatsappNumber: settings.whatsappNumber || '91 85303 28357'
+      email: settings?.email || 'admin@musclebuildnutrition.co.in',
+      phone: settings?.phone || '+91-9657866181',
+      address: settings?.address || 'Peth, Sangli Road, Musclebuild Nutrition Islampur, Opposite Rajarambapu Patil Bank',
+      whatsappNumber: settings?.whatsappNumber || '+91-9657866181'
     };
   } catch (error) {
     console.error('Error fetching contact settings:', error);
     // Return fallback values
     return {
-      email: 'ssbusiness7733@gmail.com',
-      phone: '++91 85303 28357',
-      address: 'Peth, Sangli Road, SS CREATION Islampur, Opposite Rajarambapu Patil Bank',
-      whatsappNumber: '+91 85303 28357'
+      email: 'admin@musclebuildnutrition.co.in',
+      phone: '+91-9657866181',
+      address: 'Peth, Sangli Road, Musclebuild Nutrition Islampur, Opposite Rajarambapu Patil Bank',
+      whatsappNumber: '+91-9657866181'
     };
   }
 }

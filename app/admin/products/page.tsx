@@ -27,12 +27,12 @@ import { toast } from "sonner";
 import Image from "next/image";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
-import { HierarchicalSectionSelector } from "@/components/admin/hierarchical-section-selector";
+import { CategorySelector } from "@/components/admin/category-selector";
 
-interface ProductSection {
+interface ProductCategory {
   id: string;
-  name: string;
-  slug: string;
+  title: string;
+  description: string;
 }
 
 interface Product {
@@ -45,39 +45,40 @@ interface Product {
   productFiles: string[];
   isFeatured: boolean;
   isActive: boolean;
-  sections: ProductSection[];
+  isHotDeal: boolean;
+  categories: ProductCategory[];
 }
 
 const ProductSkeleton = () => (
-              <Card className="flex flex-col h-full">
-      <CardContent className="p-4 flex flex-col flex-grow">
-        <div className="relative aspect-square mb-4 group overflow-hidden rounded-lg bg-gray-100">
-          <Skeleton className="w-full h-full" />
-        </div>
+  <Card className="flex flex-col h-full">
+    <CardContent className="p-4 flex flex-col flex-grow">
+      <div className="relative aspect-square mb-4 group overflow-hidden rounded-lg bg-gray-100">
+        <Skeleton className="w-full h-full" />
+      </div>
 
-        <div className="flex-grow">
-          <Skeleton className="h-6 w-3/4 mb-2" />
-          <Skeleton className="h-4 w-full mb-2" />
-          <Skeleton className="h-4 w-2/3 mb-2" />
-                    <div className="mb-2">
+      <div className="flex-grow">
+        <Skeleton className="h-6 w-3/4 mb-2" />
+        <Skeleton className="h-4 w-full mb-2" />
+        <Skeleton className="h-4 w-2/3 mb-2" />
+        <div className="mb-2">
           <Skeleton className="h-3 w-16 mb-1" />
-                      <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-1">
             <Skeleton className="h-5 w-20" />
             <Skeleton className="h-5 w-16" />
-                      </div>
-                    </div>
-                  </div>
+          </div>
+        </div>
+      </div>
 
-                  <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4">
         <Skeleton className="h-5 w-1/4" />
-                    </div>
-                  <div className="flex space-x-2 mt-auto">
+      </div>
+      <div className="flex space-x-2 mt-auto">
         <Skeleton className="h-9 w-1/2" />
         <Skeleton className="h-9 w-1/4" />
-                  </div>
-                </CardContent>
-              </Card>
-  );
+      </div>
+    </CardContent>
+  </Card>
+);
 
 export default function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -88,11 +89,12 @@ export default function AdminProducts() {
     description: "",
     originalPrice: "",
     discountPrice: "",
-    sectionIds: [] as string[],
+    categoryIds: [] as string[],
     displayImage: "",
     productFiles: [] as string[],
     isFeatured: false,
     isActive: true,
+    isHotDeal: false,
   });
   const [uploading, setUploading] = useState(false);
   const [newFileUrl, setNewFileUrl] = useState("");
@@ -113,12 +115,11 @@ export default function AdminProducts() {
       const response = await fetch("/api/products");
       const data = await response.json();
       setProducts(data);
-    } catch (error : any) {
+    } catch (error: any) {
       console.error("Error fetching products:", error);
       toast.error("Failed to load products.");
-}  };
-
-
+    }
+  };
 
   const handleFileUpload = async (file: File) => {
     setUploading(true);
@@ -138,7 +139,7 @@ export default function AdminProducts() {
       const data = await response.json();
       setFormData((prev) => ({ ...prev, displayImage: data.secure_url }));
       toast.success("Display image uploaded successfully");
-    } catch (error : any) {
+    } catch (error: any) {
       toast.error("Failed to upload display image");
     } finally {
       setUploading(false);
@@ -163,9 +164,15 @@ export default function AdminProducts() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate that at least one section is selected
-    if (formData.sectionIds.length === 0) {
-      toast.error("Please select at least one section");
+    // Validate that at least one category is selected
+    if (formData.categoryIds.length === 0) {
+      toast.error("Please select at least one category");
+      return;
+    }
+
+    // Validate maximum 8 categories
+    if (formData.categoryIds.length > 8) {
+      toast.error("A product can have maximum 8 categories");
       return;
     }
 
@@ -181,11 +188,12 @@ export default function AdminProducts() {
         discountPrice: formData.discountPrice
           ? parseFloat(formData.discountPrice)
           : undefined,
-        sectionIds: formData.sectionIds,
+        categoryIds: formData.categoryIds,
         displayImage: formData.displayImage,
         productFiles: validProductFiles,
         isFeatured: formData.isFeatured,
         isActive: formData.isActive,
+        isHotDeal: formData.isHotDeal,
       };
 
       const url = editingProduct
@@ -209,7 +217,7 @@ export default function AdminProducts() {
         console.error("API Error:", errorData);
         toast.error("Failed to save product: " + (errorData.message || "Unknown error"));
       }
-    } catch (error : any) {
+    } catch (error: any) {
       console.error("Submit error:", error);
       toast.error("Something went wrong");
     }
@@ -222,11 +230,12 @@ export default function AdminProducts() {
       description: product.description,
       originalPrice: product.originalPrice.toString(),
       discountPrice: product.discountPrice?.toString() || "",
-      sectionIds: product.sections?.map(section => section.id) || [],
+      categoryIds: product.categories?.map(category => category.id) || [],
       displayImage: product.displayImage,
       productFiles: product.productFiles || [],
       isFeatured: product.isFeatured,
       isActive: product.isActive,
+      isHotDeal: product.isHotDeal,
     });
     setIsModalOpen(true);
   };
@@ -241,11 +250,11 @@ export default function AdminProducts() {
 
       if (response.ok) {
         toast.success("Product deleted");
-        fetchProducts(); // Re-fetch products to update the list
+        fetchProducts();
       } else {
         toast.error("Failed to delete product");
       }
-    } catch (error : any) {
+    } catch (error: any) {
       toast.error("Something went wrong");
     }
   };
@@ -256,11 +265,12 @@ export default function AdminProducts() {
       description: "",
       originalPrice: "",
       discountPrice: "",
-      sectionIds: [],
+      categoryIds: [],
       displayImage: "",
       productFiles: [],
       isFeatured: false,
       isActive: true,
+      isHotDeal: false,
     });
     setNewFileUrl("");
     setEditingProduct(null);
@@ -302,7 +312,7 @@ export default function AdminProducts() {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <Label htmlFor="title">Title</Label>
+                  <Label htmlFor="title">Product Title</Label>
                   <Input
                     id="title"
                     value={formData.title}
@@ -360,12 +370,12 @@ export default function AdminProducts() {
                 </div>
 
                 <div>
-                  <Label>Sections</Label>
-                  <HierarchicalSectionSelector
-                    selectedSectionIds={formData.sectionIds}
-                    onSelectionChange={(sectionIds) =>
-                      setFormData({ ...formData, sectionIds })
+                  <CategorySelector
+                    selectedCategoryIds={formData.categoryIds}
+                    onSelectionChange={(categoryIds) =>
+                      setFormData({ ...formData, categoryIds })
                     }
+                    maxCategories={8}
                   />
                 </div>
 
@@ -414,7 +424,7 @@ export default function AdminProducts() {
                     </div>
                     <div className="space-y-2">
                       {formData.productFiles
-                        .filter(Boolean) // Filter out null/undefined values
+                        .filter(Boolean)
                         .map((file, index) => (
                           <div
                             key={index}
@@ -459,14 +469,25 @@ export default function AdminProducts() {
                     />
                     <Label htmlFor="active">Active</Label>
                   </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="hotdeal"
+                      checked={formData.isHotDeal}
+                      onCheckedChange={(checked) =>
+                        setFormData({ ...formData, isHotDeal: checked })
+                      }
+                    />
+                    <Label htmlFor="hotdeal">Hot Deal</Label>
+                  </div>
                 </div>
 
                 <Button type="submit" disabled={uploading} className="w-full">
                   {uploading
                     ? "Uploading..."
                     : editingProduct
-                    ? "Update Product"
-                    : "Create Product"}
+                      ? "Update Product"
+                      : "Create Product"}
                 </Button>
               </form>
             </DialogContent>
@@ -494,6 +515,9 @@ export default function AdminProducts() {
                       {product.isFeatured && (
                         <Badge className="bg-yellow-500">Featured</Badge>
                       )}
+                      {product.isHotDeal && (
+                        <Badge className="bg-red-500 text-white">Hot Deal</Badge>
+                      )}
                       {!product.isActive && (
                         <Badge variant="destructive">Inactive</Badge>
                       )}
@@ -514,22 +538,22 @@ export default function AdminProducts() {
                       {product.description}
                     </p>
                     <div className="mb-2">
-                      <p className="text-xs text-gray-500 mb-1">Sections:</p>
+                      <p className="text-xs text-gray-500 mb-1">Categories:</p>
                       <div className="flex flex-wrap gap-1">
-                        {product.sections && product.sections.length > 0 ? (
-                          product.sections.slice(0, 3).map((section) => (
-                            <Badge key={section.id} variant="outline" className="text-xs">
-                              {section.name}
+                        {product.categories && product.categories.length > 0 ? (
+                          product.categories.slice(0, 3).map((category) => (
+                            <Badge key={category.id} variant="outline" className="text-xs">
+                              {category.title}
                             </Badge>
                           ))
                         ) : (
                           <Badge variant="outline" className="text-xs">
-                            No sections
+                            No categories
                           </Badge>
                         )}
-                        {product.sections && product.sections.length > 3 && (
+                        {product.categories && product.categories.length > 3 && (
                           <Badge variant="outline" className="text-xs">
-                            +{product.sections.length - 3}
+                            +{product.categories.length - 3}
                           </Badge>
                         )}
                       </div>
@@ -544,11 +568,10 @@ export default function AdminProducts() {
                         </span>
                       )}
                       <span
-                        className={`${
-                          product.discountPrice
-                            ? "line-through text-gray-500 ml-2"
-                            : "text-lg font-bold"
-                        }`}
+                        className={`${product.discountPrice
+                          ? "line-through text-gray-500 ml-2"
+                          : "text-lg font-bold"
+                          }`}
                       >
                         ₹{product.originalPrice}
                       </span>

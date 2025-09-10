@@ -9,9 +9,14 @@ import { Badge } from "@/components/ui/badge"
 import { Package, ShoppingCart, TrendingUp, LogOut, ArrowUpRight, Activity, Users, Settings, FileText, PlusCircle } from "lucide-react"
 import Link from "next/link"
 
+export const dynamic = 'force-dynamic';
+
 export default function AdminDashboard() {
-  const { data: session, status } = useSession()
+  // Only use session hook if we're on the client side
+  const sessionHook = typeof window !== 'undefined' ? useSession() : { data: null, status: 'loading' };
+  const { data: session, status } = sessionHook;
   const router = useRouter()
+  const [mounted, setMounted] = useState(false)
   const [stats, setStats] = useState({
     totalProducts: 0,
     totalOrders: 0,
@@ -22,7 +27,11 @@ export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (status === "loading") return
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || status === "loading") return
 
     if (!session?.user?.isAdmin) {
       router.push("/admin/login")
@@ -30,9 +39,9 @@ export default function AdminDashboard() {
     }
 
     fetchStats()
-  }, [session, status, router])
+  }, [session, status, router, mounted])
 
-  if (status === "loading") {
+  if (!mounted || status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-200 to-teal-200">
         <div className="flex flex-col items-center space-y-4">

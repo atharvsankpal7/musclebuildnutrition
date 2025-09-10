@@ -1,105 +1,91 @@
-import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { SSRHeader } from '@/components/layout/ssr-header';
-import { Footer } from '@/components/layout/footer';
+import { notFound } from 'next/navigation';
 import { ProductGrid } from '@/components/products/product-grid';
-import { SectionBreadcrumb } from '@/components/products/section-breadcrumb';
-import { SectionSidebar } from '@/components/products/section-sidebar';
-import { getSectionBySlugPath, getSectionBreadcrumb, buildSectionPath } from '@/lib/section-utils';
-import connectDB from '@/lib/mongodb';
-import { Product } from '@/lib/models';
-import { getSectionProducts, getSectionProducts2 } from '@/lib/actions';
+import { getAllProducts } from '@/lib/actions';
+import { getNavigationSections } from '@/lib/section-utils';
+import { SEOHead } from '@/components/seo/seo-head';
 
-interface ProductPageProps {
+interface SectionPageProps {
   params: {
     sections: string[];
   };
   searchParams: {
-    page?: string;
-    sort?: string;
-    priceRange?: string;
+    search?: string;
   };
 }
 
+export async function generateMetadata({ params }: SectionPageProps): Promise<Metadata> {
+  const sections = await getNavigationSections();
+  const sectionPath = params.sections.join('/');
+  const section = sections.find(s => s.slug === sectionPath);
 
-
-export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const slugPath = params.sections.join('/');
-  const section = await getSectionBySlugPath(slugPath);
-  
   if (!section) {
     return {
-      title: 'Products - SSCreation',
-      description: 'Browse our premium graphic design templates and digital products.',
+      title: 'Section Not Found - Musclebuild Nutrition',
+      description: 'The requested fitness and nutrition product section could not be found.',
     };
   }
-  
-  const breadcrumb = await getSectionBreadcrumb(section.id);
-  const breadcrumbText = breadcrumb.map(s => s.name).join(' > ');
-  
+
   return {
-    title: `${section.name} - Premium Design Templates | SSCreation`,
-    description: `Explore our ${section.name.toLowerCase()} collection. Premium graphic design templates with instant download and commercial license.`,
-    keywords: `${section.name}, graphic design templates, premium templates, SSCreation, ${section.name.toLowerCase()} designs`,
+    title: `${section.name} - Musclebuild Nutrition | Premium Fitness & Nutrition Products`,
+    description: `Explore our ${section.name.toLowerCase()} collection. Premium fitness and nutrition products for ${section.name.toLowerCase()} with quality ingredients and proven results.`,
+    keywords: `musclebuild nutrition, ${section.name.toLowerCase()}, fitness products, nutrition supplements, ${section.name.toLowerCase()} products`,
     openGraph: {
-      title: `${section.name} - Premium Design Templates`,
-      description: `Explore our ${section.name.toLowerCase()} collection. Premium graphic design templates with instant download.`,
-      url: `https://sscreation.com/products/${slugPath}`,
+      title: `${section.name} - Musclebuild Nutrition | Premium Fitness & Nutrition Products`,
+      description: `Explore our ${section.name.toLowerCase()} collection. Premium fitness and nutrition products for ${section.name.toLowerCase()}.`,
+      type: 'website',
     },
-    alternates: {
-      canonical: `https://sscreation.com/products/${slugPath}`,
+    twitter: {
+      card: 'summary_large_image',
+      title: `${section.name} - Musclebuild Nutrition | Premium Fitness & Nutrition Products`,
+      description: `Explore our ${section.name.toLowerCase()} collection. Premium fitness and nutrition products.`,
     },
   };
 }
 
-export default async function SectionProductsPage({ params, searchParams }: ProductPageProps) {
-  const slugPath = params.sections.join('/');
-  const section = await getSectionBySlugPath(slugPath);
-  
+export default async function SectionPage({ params, searchParams }: SectionPageProps) {
+  const sections = await getNavigationSections();
+  const sectionPath = params.sections.join('/');
+  const section = sections.find(s => s.slug === sectionPath);
+
   if (!section) {
     notFound();
   }
-  
-  const page = parseInt(searchParams.page || '1');
-  const sort = searchParams.sort || 'newest';
-  const priceRange = searchParams.priceRange;
-  
-  const [productData, breadcrumb] = await Promise.all([
-    getSectionProducts2(section.id, page, sort, priceRange),
-    getSectionBreadcrumb(section.id)
-  ]);
-  
+
+  const productsData = await getAllProducts();
+  const filteredProducts = productsData.products.filter(product =>
+    product.categories.some((cat: any) => cat.slug === section.slug)
+  );
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <SSRHeader />
+      <SEOHead 
+        title={`${section.name} - Musclebuild Nutrition | Premium Fitness & Nutrition Products`}
+        description={`Explore our ${section.name.toLowerCase()} collection. Premium fitness and nutrition products for ${section.name.toLowerCase()} with quality ingredients and proven results.`}
+        keywords={`musclebuild nutrition, ${section.name.toLowerCase()}, fitness products, nutrition supplements`}
+      />
       
       <main className="container mx-auto px-4 py-8">
-        <SectionBreadcrumb breadcrumb={breadcrumb} />
-        
-        <div className="mb-8">
-          <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+        {/* Page Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             {section.name}
           </h1>
-          
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Explore our {section.name.toLowerCase()} collection. Premium fitness and nutrition products with quality ingredients.
+          </p>
         </div>
-        
-        <div className="flex flex-col lg:flex-row gap-8">
-          <aside className="lg:w-64 flex-shrink-0">
-            <SectionSidebar currentSection={section} />
-          </aside>
-          
-          <div className="flex-1">
-            <ProductGrid 
-              {...productData}
-              sort={sort}
-              priceRange={priceRange}
-              sectionPath={slugPath}
-            />
-          </div>
-        </div>
+
+        {/* Products Grid */}
+        <ProductGrid 
+          products={filteredProducts}
+          totalCount={filteredProducts.length}
+          totalPages={1}
+          currentPage={1}
+          sort="newest"
+          sectionPath={sectionPath}
+        />
       </main>
-      
-      <Footer />
     </div>
   );
 }

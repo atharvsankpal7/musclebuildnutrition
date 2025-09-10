@@ -5,15 +5,15 @@ import ContactSettings from '@/models/ContactSettings';
 export async function GET() {
   try {
     await connectDB();
-    
-    let settings = await ContactSettings.findOne();
-    
+
+    let settings = await ContactSettings.findOne().lean();
+
     // If no settings exist, create default ones
     if (!settings) {
       settings = await ContactSettings.create({});
     }
-    
-    return NextResponse.json(settings);
+
+    return NextResponse.json(JSON.parse(JSON.stringify(settings)));
   } catch (error) {
     console.error('Error fetching contact settings:', error);
     return NextResponse.json(
@@ -26,11 +26,11 @@ export async function GET() {
 export async function PUT(request: NextRequest) {
   try {
     await connectDB();
-    
+
     const data = await request.json();
-    
-    let settings = await ContactSettings.findOne();
-    
+
+    let settings = await ContactSettings.findOne().lean();
+
     if (!settings) {
       settings = await ContactSettings.create(data);
     } else {
@@ -38,10 +38,10 @@ export async function PUT(request: NextRequest) {
         {},
         data,
         { new: true, runValidators: true }
-      );
+      ).lean();
     }
-    
-    return NextResponse.json(settings);
+
+    return NextResponse.json(JSON.parse(JSON.stringify(settings)));
   } catch (error) {
     console.error('Error updating contact settings:', error);
     return NextResponse.json(

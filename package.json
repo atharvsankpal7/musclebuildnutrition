@@ -10,7 +10,13 @@
     "seed": "tsx scripts/seed.ts",
     "migrate-sections": "tsx scripts/migrate-sections.ts",
     "seed-hero-slides": "tsx scripts/seed-hero-slides.ts",
-    "seed-contact-data": "tsx scripts/seed-contact-data.ts"
+    "seed-contact-data": "tsx scripts/seed-contact-data.ts",
+    "migrate-to-categories": "tsx scripts/migrate-products-to-categories.ts",
+    "delete-products": "tsx scripts/delete-products.ts",
+    "migrate-to-products": "tsx scripts/migrate-categories-to-products.ts",
+    "delete-categories": "tsx scripts/delete-categories.ts",
+    "seed-fixed-categories": "tsx scripts/seed-fixed-categories.ts",
+    "seed-demo-products": "tsx scripts/seed-demo-products.ts"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",

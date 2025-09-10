@@ -194,3 +194,152 @@ export async function sendProductFiles(email: string, productTitle: string, file
 
   await transporter.sendMail(mailOptions);
 }
+
+export async function sendOrderConfirmationEmail(orderData: any) {
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT || '587'),
+    secure: false,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+
+  const emailContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Order Confirmation - Musclebuild Nutrition</title>
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #dc2626; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f9f9f9; }
+        .footer { background: #333; color: white; padding: 20px; text-align: center; }
+        .order-details { background: white; padding: 15px; margin: 15px 0; border-radius: 5px; }
+        .button { display: inline-block; padding: 10px 20px; background: #dc2626; color: white; text-decoration: none; border-radius: 5px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>Order Confirmation</h1>
+          <p>Musclebuild Nutrition</p>
+        </div>
+        
+        <div class="content">
+          <h2>Thank you for your order!</h2>
+          <p>Dear ${orderData.customerName},</p>
+          
+          <p>Your order has been successfully placed and is being processed.</p>
+          
+          <div class="order-details">
+            <h3>Order Details:</h3>
+            <p><strong>Order ID:</strong> ${orderData.orderId}</p>
+            <p><strong>Order Date:</strong> ${new Date().toLocaleDateString()}</p>
+            <p><strong>Total Amount:</strong> ₹${orderData.amount}</p>
+            <p><strong>Payment Status:</strong> ${orderData.paymentStatus}</p>
+          </div>
+          
+          <p>We will contact you shortly to confirm your order and arrange delivery.</p>
+          
+          <p>If you have any questions, please don't hesitate to contact us.</p>
+          
+          <p>Best regards,<br>Musclebuild Nutrition Team</p>
+        </div>
+        
+        <div class="footer">
+          <p>© ${new Date().getFullYear()} Musclebuild Nutrition. All rights reserved.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: process.env.SMTP_USER,
+      to: orderData.customerEmail,
+      subject: 'Order Confirmation - Musclebuild Nutrition',
+      html: emailContent,
+    });
+    
+    console.log('Order confirmation email sent successfully');
+  } catch (error) {
+    console.error('Error sending order confirmation email:', error);
+  }
+}
+
+export async function sendAdminNotificationEmail(orderData: any) {
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT || '587'),
+    secure: false,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+
+  const emailContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>New Order Notification - Musclebuild Nutrition</title>
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #dc2626; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f9f9f9; }
+        .footer { background: #333; color: white; padding: 20px; text-align: center; }
+        .order-details { background: white; padding: 15px; margin: 15px 0; border-radius: 5px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>New Order Notification</h1>
+          <p>Musclebuild Nutrition</p>
+        </div>
+        
+        <div class="content">
+          <h2>A new order has been placed!</h2>
+          
+          <div class="order-details">
+            <h3>Order Details:</h3>
+            <p><strong>Order ID:</strong> ${orderData.orderId}</p>
+            <p><strong>Customer Name:</strong> ${orderData.customerName}</p>
+            <p><strong>Customer Email:</strong> ${orderData.customerEmail}</p>
+            <p><strong>Customer Phone:</strong> ${orderData.customerPhone}</p>
+            <p><strong>Order Date:</strong> ${new Date().toLocaleDateString()}</p>
+            <p><strong>Total Amount:</strong> ₹${orderData.amount}</p>
+            <p><strong>Payment Status:</strong> ${orderData.paymentStatus}</p>
+          </div>
+          
+          <p>Please process this order as soon as possible.</p>
+        </div>
+        
+        <div class="footer">
+          <p>© ${new Date().getFullYear()} Musclebuild Nutrition. All rights reserved.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: process.env.SMTP_USER,
+      to: process.env.ADMIN_EMAIL || 'admin@musclebuildnutrition.com',
+      subject: 'New Order Notification - Musclebuild Nutrition',
+      html: emailContent,
+    });
+    
+    console.log('Admin notification email sent successfully');
+  } catch (error) {
+    console.error('Error sending admin notification email:', error);
+  }
+}

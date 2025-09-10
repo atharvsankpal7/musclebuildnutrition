@@ -5,11 +5,12 @@ export interface IProduct extends Document {
   description: string;
   originalPrice: number;
   discountPrice?: number;
-  sectionIds: mongoose.Types.ObjectId[];
+  categoryIds: mongoose.Types.ObjectId[]; // Up to 8 categories
   displayImage: string;
   productFiles: string[];
   isFeatured: boolean;
   isActive: boolean;
+  isHotDeal: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -30,11 +31,16 @@ const ProductSchema = new Schema<IProduct>({
   discountPrice: {
     type: Number,
   },
-  sectionIds: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Section',
+  categoryIds: {
+    type: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
     required: true,
-  }],
+    validate: {
+      validator: function (categories: mongoose.Types.ObjectId[]) {
+        return Array.isArray(categories) && categories.length > 0 && categories.length <= 8;
+      },
+      message: 'A product must have 1-8 categories',
+    },
+  },
   displayImage: {
     type: String,
     required: true,
@@ -50,6 +56,10 @@ const ProductSchema = new Schema<IProduct>({
   isActive: {
     type: Boolean,
     default: true,
+  },
+  isHotDeal: {
+    type: Boolean,
+    default: false,
   },
 }, {
   timestamps: true,

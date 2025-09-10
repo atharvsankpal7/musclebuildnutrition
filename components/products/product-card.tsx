@@ -24,7 +24,7 @@ interface ProductCardProps {
 export function ProductCard({ product, onPurchase }: ProductCardProps) {
   const handleWhatsApp = () => {
     const message = `Hi, I'm interested in the product: ${product.title}`;
-    const phoneNumber = '919876543210'; // Replace with actual WhatsApp number
+    const phoneNumber = '9657866181'; // Replace with actual WhatsApp number
     window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
@@ -47,11 +47,11 @@ export function ProductCard({ product, onPurchase }: ProductCardProps) {
             </Badge>
           )}
         </div>
-        
+
         <div className="p-4">
           <h3 className="font-semibold mb-2 line-clamp-2">{product.title}</h3>
           <p className="text-sm text-gray-600 mb-3 line-clamp-2">{product.description}</p>
-          
+
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-2">
               {product.discountPrice && (
@@ -64,9 +64,9 @@ export function ProductCard({ product, onPurchase }: ProductCardProps) {
               </span>
             </div>
           </div>
-          
+
           <div className="flex gap-2">
-            <Button 
+            <Button
               onClick={() => onPurchase(product.id)}
               className="flex-1"
               size="sm"
@@ -74,7 +74,7 @@ export function ProductCard({ product, onPurchase }: ProductCardProps) {
               <ShoppingCart className="h-4 w-4 mr-1" />
               Buy Now
             </Button>
-            <Button 
+            <Button
               onClick={handleWhatsApp}
               variant="outline"
               size="sm"
