@@ -15,7 +15,7 @@ export function Footer() {
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-full flex items-center justify-center bg-transparent">
                 <Image
-                  src="/logos/logo.jpg"
+                  src="/logos/logo color.jpg"
                   alt="Logo"
                   width={40}
                   height={40}
