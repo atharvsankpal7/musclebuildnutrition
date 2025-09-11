@@ -55,7 +55,7 @@ export function NewHeader({ navigationSections = [], headerData }: NewHeaderProp
             <div className="relative">
               <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-transparent">
                 <Image
-                  src="/logos/logo.jpg"
+                  src="/logos/header-logo.jpg"
                   alt="Musclebuild Logo"
                   width={32}
                   height={32}
@@ -66,9 +66,7 @@ export function NewHeader({ navigationSections = [], headerData }: NewHeaderProp
             <div className="flex flex-col">
               <div className="flex items-center space-x-1">
                 <span className="text-red-600 font-bold text-sm sm:text-base md:text-lg">Musclebuild Nutrition</span>
-                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-600 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs">🍁</span>
-                </div>
+                
               </div>
               <span className="text-red-600 text-xs hidden sm:block">KNOW BETTER, LIVE BETTER</span>
             </div>
