@@ -11,11 +11,7 @@ export async function GET(
     await connectDB();
 
     const product = await Product.findById(params.id)
-      .populate({
-        path: 'categoryIds',
-        model: Category,
-        select: 'title description slug'
-      });
+      
 
     if (!product) {
       return NextResponse.json(
@@ -35,12 +31,6 @@ export async function GET(
       isFeatured: product.isFeatured,
       isActive: product.isActive,
       isHotDeal: product.isHotDeal,
-      categories: product.categoryIds.map((category: any) => ({
-        id: category._id.toString(),
-        title: category.title,
-        slug: category.slug,
-        description: category.description
-      }))
     };
 
     return NextResponse.json(productWithCategories);
@@ -75,27 +65,15 @@ export async function PUT(
       isHotDeal
     } = body;
 
-    if (!title || !description || !originalPrice || !categoryIds || !displayImage) {
+    if (!title || !description || !originalPrice || !displayImage) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       );
     }
 
-    if (categoryIds.length > 8) {
-      return NextResponse.json(
-        { error: 'A product can have maximum 8 categories' },
-        { status: 400 }
-      );
-    }
 
-    const categories = await Category.find({ _id: { $in: categoryIds } });
-    if (categories.length !== categoryIds.length) {
-      return NextResponse.json(
-        { error: 'One or more categories not found' },
-        { status: 400 }
-      );
-    }
+
 
     const product = await Product.findByIdAndUpdate(
       params.id,
@@ -104,7 +82,6 @@ export async function PUT(
         description,
         originalPrice,
         discountPrice,
-        categoryIds,
         displayImage,
         productFiles: productFiles || [],
         isFeatured: isFeatured || false,
