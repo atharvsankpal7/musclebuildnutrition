@@ -28,7 +28,7 @@ async function migrateProductsToCategories() {
           description: product.description,
           originalPrice: product.originalPrice,
           discountPrice: product.discountPrice,
-          sectionIds: product.sectionIds,
+          categoryIds: product.categoryIds,
           displayImage: product.displayImage,
           categoryFiles: product.productFiles || [],
           isFeatured: product.isFeatured,

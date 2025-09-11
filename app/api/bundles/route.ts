@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 
     let bundleQuery = Bundle.find(query)
       .populate('products', 'title displayImage originalPrice discountPrice')
-      .populate('sectionIds', 'name slug')
+      .populate('categoryIds', 'name slug')
       .sort({ createdAt: -1 });
 
     if (limit) {
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
         originalPrice: product.originalPrice,
         discountPrice: product.discountPrice,
       })),
-      sections: bundle.sectionIds?.map((section: any) => ({
+      sections: bundle.categoryIds?.map((section: any) => ({
         id: section._id.toString(),
         name: section.name,
         slug: section.slug,
@@ -82,20 +82,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'At least one product must be selected' }, { status: 400 });
     }
 
-    // Validate that sectionIds is provided and is an array (can be empty for bundles)
-    if (data.sectionIds && !Array.isArray(data.sectionIds)) {
+    // Validate that categoryIds is provided and is an array (can be empty for bundles)
+    if (data.categoryIds && !Array.isArray(data.categoryIds)) {
       return NextResponse.json({ error: 'Section IDs must be an array' }, { status: 400 });
     }
 
-    // Validate that all section IDs exist if sectionIds is provided and not empty
-    if (data.sectionIds && data.sectionIds.length > 0) {
+    // Validate that all section IDs exist if categoryIds is provided and not empty
+    if (data.categoryIds && data.categoryIds.length > 0) {
       const { Section } = await import('@/lib/models');
       const validSections = await Section.find({ 
-        _id: { $in: data.sectionIds },
+        _id: { $in: data.categoryIds },
         isActive: true 
       });
 
-      if (validSections.length !== data.sectionIds.length) {
+      if (validSections.length !== data.categoryIds.length) {
         return NextResponse.json({ error: 'One or more selected sections are invalid' }, { status: 400 });
       }
     }

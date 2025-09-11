@@ -203,17 +203,7 @@ export async function getAllProducts(page = 1, sort = 'newest', priceRange?: str
     isActive: true,
   };
 
-  // Apply section filter
-  if (sectionName) {
-    const section = await Section.findOne({
-      name: { $regex: new RegExp(sectionName, 'i') },
-      isActive: true
-    });
-    if (section) {
-      query.sectionIds = section._id;
-    }
-  }
-
+  
   // Apply price range filter
   if (priceRange) {
     const [min, max] = priceRange.split('-').map(Number);
@@ -247,8 +237,7 @@ export async function getAllProducts(page = 1, sort = 'newest', priceRange?: str
     Product.find(query)
       .sort(sortQuery)
       .skip(skip)
-      .limit(limit)
-      .populate('categoryIds', 'title slug'),
+      .limit(limit),
     Product.countDocuments(query)
   ]);
 
@@ -260,11 +249,7 @@ export async function getAllProducts(page = 1, sort = 'newest', priceRange?: str
     originalPrice: product.originalPrice,
     discountPrice: product.discountPrice,
     isFeatured: product.isFeatured,
-    categories: (product.categoryIds || []).map((cat: any) => ({
-      id: cat._id.toString(),
-      title: cat.title,
-      slug: cat.slug,
-    })),
+    
   }));
 
   return {
@@ -282,7 +267,7 @@ export async function getSectionProducts(sectionId: string): Promise<ProductType
 
     const products = await Product.find({
       isActive: true,
-      sectionIds: sectionId,
+      categoryIds: sectionId,
     })
       .sort({ createdAt: -1 })
       .limit(8)
@@ -469,7 +454,7 @@ export async function getFooterData() {
 
     const footerLinks = await FooterLinks.find({
       isActive: true
-    }).sort({ category: 1, order: 1 }).lean();
+    }).sort({ order: 1 }).lean();
 
     return {
       contactSettings: JSON.parse(JSON.stringify(contactSettings)),
@@ -498,7 +483,7 @@ export async function getSectionProducts2(sectionId: string, page = 1, sort = 'n
 
   let query: any = {
     isActive: true,
-    sectionIds: sectionId,
+    categoryIds: sectionId,
   };
 
   // Apply price range filter
@@ -534,8 +519,7 @@ export async function getSectionProducts2(sectionId: string, page = 1, sort = 'n
     Product.find(query)
       .sort(sortQuery)
       .skip(skip)
-      .limit(limit)
-      .populate('categoryIds', 'title slug'),
+      .limit(limit),
     Product.countDocuments(query)
   ]);
 
@@ -548,11 +532,7 @@ export async function getSectionProducts2(sectionId: string, page = 1, sort = 'n
     discountPrice: product.discountPrice,
     isFeatured: product.isFeatured,
     isHotDeal: product.isHotDeal,
-    categories: (product.categoryIds || []).map((cat: any) => ({
-      id: cat.id.toString(),
-      title: cat.title,
-      slug: cat.slug,
-    })),
+  
   }));
 
   return {

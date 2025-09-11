@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
         { description: { $regex: searchRegex } }
       ]
     })
-    .populate('sectionIds', 'name slug')
+    .populate('categoryIds', 'name slug')
     .limit(10)
     .sort({ isFeatured: -1, createdAt: -1 });
 
@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
       discountPrice: product.discountPrice,
       type: 'product',
       url: `/products/${product._id}`,
-      sections: product.sectionIds?.map((section: any) => ({
+      sections: product.categoryIds?.map((section: any) => ({
         id: section._id.toString(),
         name: section.name,
         slug: section.slug,

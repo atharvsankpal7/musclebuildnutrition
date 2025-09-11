@@ -19,13 +19,13 @@ import { SectionHierarchy } from '@/types/section';
 import { toast } from 'sonner';
 
 interface HierarchicalSectionSelectorProps {
-  selectedSectionIds: string[];
-  onSelectionChange: (sectionIds: string[]) => void;
+  selectedcategoryIds: string[];
+  onSelectionChange: (categoryIds: string[]) => void;
   className?: string;
 }
 
 export function HierarchicalSectionSelector({
-  selectedSectionIds,
+  selectedcategoryIds,
   onSelectionChange,
   className = ''
 }: HierarchicalSectionSelectorProps) {
@@ -45,7 +45,7 @@ export function HierarchicalSectionSelector({
       setSections(data);
       
       // Auto-expand sections that have selected children
-      autoExpandSelectedSections(data, selectedSectionIds);
+      autoExpandSelectedSections(data, selectedcategoryIds);
     } catch (error : any) {
       console.error('Error fetching sections:', error);
       toast.error('Failed to load sections');
@@ -128,7 +128,7 @@ export function HierarchicalSectionSelector({
   };
 
   const handleSectionToggle = (section: SectionHierarchy, isChecked: boolean) => {
-    let newSelectedIds = [...selectedSectionIds];
+    let newSelectedIds = [...selectedcategoryIds];
     
     if (isChecked) {
       // Add the section
@@ -177,7 +177,7 @@ export function HierarchicalSectionSelector({
   };
 
   const getSelectedSectionNames = (): { id: string; name: string; level: number }[] => {
-    return selectedSectionIds
+    return selectedcategoryIds
       .map(id => {
         const section = getSectionByIdFromTree(sections, id);
         return section ? { id, name: section.name, level: section.level } : null;
@@ -202,7 +202,7 @@ export function HierarchicalSectionSelector({
       return null
     }
     return sections.map((section) => {
-      const isSelected = selectedSectionIds.includes(section.id);
+      const isSelected = selectedcategoryIds.includes(section.id);
       const hasChildren = section.children && section.children.length > 0;
       const isExpanded = expandedSections.has(section.id);
       const indentLevel = level * 16;

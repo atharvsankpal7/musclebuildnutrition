@@ -86,7 +86,7 @@ async function seedFixedCategories() {
           description: cat.description,
           originalPrice: 0,
           discountPrice: undefined,
-          sectionIds: [],
+          categoryIds: [],
           displayImage: cat.image,
           categoryFiles: [],
           isFeatured: false,

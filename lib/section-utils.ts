@@ -67,12 +67,12 @@ export const getNavigationSections =
     const allSections = await Section.find({ isActive: true }).sort({ level: 1, displayOrder: 1 });
     
     // Find sections that should be shown in navbar or have children that should be shown
-    const navbarSectionIds = new Set<string>();
+    const navbarcategoryIds = new Set<string>();
     
     // First pass: collect all sections marked for navbar
     allSections.forEach(section => {
       if (section.showInNavbar) {
-        navbarSectionIds.add(section.id.toString());
+        navbarcategoryIds.add(section.id.toString());
       }
     });
     
@@ -81,15 +81,15 @@ export const getNavigationSections =
       const section = allSections.find(s => s.id.toString() === sectionId);
       if (section && section.parentId) {
         const parentId = section.parentId.toString();
-        if (!navbarSectionIds.has(parentId)) {
-          navbarSectionIds.add(parentId);
+        if (!navbarcategoryIds.has(parentId)) {
+          navbarcategoryIds.add(parentId);
           addParentSections(parentId); // Recursively add grandparents
         }
       }
     };
     
     // Add parent sections for all navbar sections
-    Array.from(navbarSectionIds).forEach(sectionId => {
+    Array.from(navbarcategoryIds).forEach(sectionId => {
       addParentSections(sectionId);
     });
     
@@ -98,7 +98,7 @@ export const getNavigationSections =
     const rootSections: SectionHierarchy[] = [];
     
     allSections.forEach(section => {
-      if (navbarSectionIds.has(section.id.toString())) {
+      if (navbarcategoryIds.has(section.id.toString())) {
         const hierarchySection: SectionHierarchy = {
           id: section.id.toString(),
           name: section.name,
@@ -121,7 +121,7 @@ export const getNavigationSections =
     
     // Build parent-child relationships
     allSections.forEach(section => {
-      if (navbarSectionIds.has(section.id.toString()) && section.parentId) {
+      if (navbarcategoryIds.has(section.id.toString()) && section.parentId) {
         const parent = sectionMap.get(section.parentId.toString());
         const child = sectionMap.get(section.id.toString());
         

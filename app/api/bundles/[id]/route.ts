@@ -22,7 +22,7 @@ export async function GET(
     
     const bundle = await Bundle.findById(params.id)
       .populate('products', 'title displayImage originalPrice discountPrice description')
-      .populate('sectionIds', 'name slug')
+      .populate('categoryIds', 'name slug')
       .exec();
 
     if (!bundle) {
@@ -50,7 +50,7 @@ export async function GET(
         originalPrice: product.originalPrice,
         discountPrice: product.discountPrice,
       })),
-      sections: bundle.sectionIds?.map((section: any) => ({
+      sections: bundle.categoryIds?.map((section: any) => ({
         id: section._id.toString(),
         name: section.name,
         slug: section.slug,
@@ -93,20 +93,20 @@ export async function PUT(
       return NextResponse.json({ error: 'At least one product must be selected' }, { status: 400 });
     }
 
-    // Validate that sectionIds is an array if provided
-    if (data.sectionIds && !Array.isArray(data.sectionIds)) {
+    // Validate that categoryIds is an array if provided
+    if (data.categoryIds && !Array.isArray(data.categoryIds)) {
       return NextResponse.json({ error: 'Section IDs must be an array' }, { status: 400 });
     }
 
-    // Validate that all section IDs exist if sectionIds is provided and not empty
-    if (data.sectionIds && data.sectionIds.length > 0) {
+    // Validate that all section IDs exist if categoryIds is provided and not empty
+    if (data.categoryIds && data.categoryIds.length > 0) {
       const { Section } = await import('@/lib/models');
       const validSections = await Section.find({ 
-        _id: { $in: data.sectionIds },
+        _id: { $in: data.categoryIds },
         isActive: true 
       });
 
-      if (validSections.length !== data.sectionIds.length) {
+      if (validSections.length !== data.categoryIds.length) {
         return NextResponse.json({ error: 'One or more selected sections are invalid' }, { status: 400 });
       }
     }
@@ -116,7 +116,7 @@ export async function PUT(
       data,
       { new: true, runValidators: true }
     ).populate('products', 'title displayImage originalPrice discountPrice')
-     .populate('sectionIds', 'name slug');
+     .populate('categoryIds', 'name slug');
 
     if (!bundle) {
       return NextResponse.json({ error: 'Bundle not found' }, { status: 404 });
@@ -140,7 +140,7 @@ export async function PUT(
         originalPrice: product.originalPrice,
         discountPrice: product.discountPrice,
       })),
-      sections: bundle.sectionIds?.map((section: any) => ({
+      sections: bundle.categoryIds?.map((section: any) => ({
         id: section._id.toString(),
         name: section.name,
         slug: section.slug,

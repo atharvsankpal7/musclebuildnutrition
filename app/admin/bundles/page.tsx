@@ -70,7 +70,7 @@ export default function AdminBundles() {
     discountPrice: "",
     displayImage: "",
     products: [] as string[],
-    sectionIds: [] as string[],
+    categoryIds: [] as string[],
     isActive: true,
     isFeatured: false,
   });
@@ -154,7 +154,7 @@ export default function AdminBundles() {
           : undefined,
         displayImage: formData.displayImage,
         products: formData.products, // These are product IDs
-        sectionIds: formData.sectionIds, // These are section IDs
+        categoryIds: formData.categoryIds, // These are section IDs
         isActive: formData.isActive,
         isFeatured: formData.isFeatured,
       };
@@ -195,7 +195,7 @@ export default function AdminBundles() {
       discountPrice: bundle.discountPrice?.toString() || "",
       displayImage: bundle.displayImage,
       products: bundle.products.map(p => p.id),
-      sectionIds: bundle.sections?.map(section => section.id) || [],
+      categoryIds: bundle.sections?.map(section => section.id) || [],
       isActive: bundle.isActive,
       isFeatured: bundle.isFeatured,
     });
@@ -231,7 +231,7 @@ export default function AdminBundles() {
       discountPrice: "",
       displayImage: "",
       products: [],
-      sectionIds: [],
+      categoryIds: [],
       isActive: true,
       isFeatured: false,
     });
@@ -385,9 +385,9 @@ export default function AdminBundles() {
                 <div>
                   <Label>Sections</Label>
                   <HierarchicalSectionSelector
-                    selectedSectionIds={formData.sectionIds}
-                    onSelectionChange={(sectionIds) =>
-                      setFormData({ ...formData, sectionIds })
+                    selectedcategoryIds={formData.categoryIds}
+                    onSelectionChange={(categoryIds) =>
+                      setFormData({ ...formData, categoryIds })
                     }
                   />
                 </div>

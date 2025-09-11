@@ -142,7 +142,7 @@ export async function DELETE(
     }
     
     // Check if section is used by products
-    const productsCount = await Product.countDocuments({ sectionIds: sectionId });
+    const productsCount = await Product.countDocuments({ categoryIds: sectionId });
     if (productsCount > 0) {
       return NextResponse.json({ 
         error: `Cannot delete section. It is used by ${productsCount} product(s).` 
@@ -150,7 +150,7 @@ export async function DELETE(
     }
     
     // Check if section is used by bundles
-    const bundlesCount = await Bundle.countDocuments({ sectionIds: sectionId });
+    const bundlesCount = await Bundle.countDocuments({ categoryIds: sectionId });
     if (bundlesCount > 0) {
       return NextResponse.json({ 
         error: `Cannot delete section. It is used by ${bundlesCount} bundle(s).` 

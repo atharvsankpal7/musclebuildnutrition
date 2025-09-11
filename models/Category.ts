@@ -6,7 +6,7 @@ export interface ICategory extends Document {
   description: string;
   originalPrice: number;
   discountPrice?: number;
-  sectionIds: mongoose.Types.ObjectId[];
+  categoryIds: mongoose.Types.ObjectId[];
   displayImage: string;
   categoryFiles: string[];
   isFeatured: boolean;
@@ -36,7 +36,7 @@ const CategorySchema = new Schema<ICategory>({
   discountPrice: {
     type: Number,
   },
-  sectionIds: [{
+  categoryIds: [{
     type: Schema.Types.ObjectId,
     ref: 'Section',
     required: true,

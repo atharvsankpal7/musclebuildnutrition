@@ -46,45 +46,45 @@ async function migrateSections() {
       }
     }
     
-    // Step 2: Update products to use sectionIds array instead of sectionId
+    // Step 2: Update products to use categoryIds array instead of sectionId
     console.log('📦 Updating products...');
     
     const products = await Product.find({});
     
     for (const product of products) {
-      if (product.sectionId && !product.sectionIds) {
+      if (product.sectionId && !product.categoryIds) {
         await Product.findByIdAndUpdate(product._id, {
-          sectionIds: [product.sectionId],
+          categoryIds: [product.sectionId],
           $unset: { sectionId: 1 }
         });
         console.log(`✅ Updated product: ${product.title}`);
       }
     }
     
-    // Step 3: Update bundles to include sectionIds
+    // Step 3: Update bundles to include categoryIds
     console.log('📦 Updating bundles...');
     
     const bundles = await Bundle.find({});
     
     for (const bundle of bundles) {
-      if (!bundle.sectionIds || bundle.sectionIds.length === 0) {
+      if (!bundle.categoryIds || bundle.categoryIds.length === 0) {
         // Get sections from bundle's products
         const bundleProducts = await Product.find({
           _id: { $in: bundle.products }
-        }).populate('sectionIds');
+        }).populate('categoryIds');
         
-        const sectionIds = new Set();
+        const categoryIds = new Set();
         bundleProducts.forEach(product => {
-          if (product.sectionIds) {
-            product.sectionIds.forEach((sectionId: any) => {
-              sectionIds.add(sectionId.toString());
+          if (product.categoryIds) {
+            product.categoryIds.forEach((sectionId: any) => {
+              categoryIds.add(sectionId.toString());
             });
           }
         });
         
-        if (sectionIds.size > 0) {
+        if (categoryIds.size > 0) {
           await Bundle.findByIdAndUpdate(bundle._id, {
-            sectionIds: Array.from(sectionIds)
+            categoryIds: Array.from(categoryIds)
           });
           console.log(`✅ Updated bundle: ${bundle.name}`);
         }

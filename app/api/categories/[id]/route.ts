@@ -12,7 +12,7 @@ export async function GET(
     
     const category = await Category.findById(params.id)
       .populate({
-        path: 'sectionIds',
+        path: 'categoryIds',
         model: Section,
         select: 'name slug'
       });
@@ -34,7 +34,7 @@ export async function GET(
       categoryFiles: category.categoryFiles,
       isFeatured: category.isFeatured,
       isActive: category.isActive,
-      sections: category.sectionIds.map((section: any) => ({
+      sections: category.categoryIds.map((section: any) => ({
         id: section._id.toString(),
         name: section.name,
         slug: section.slug

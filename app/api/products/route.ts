@@ -8,11 +8,6 @@ export async function GET() {
     await connectDB();
 
     const products = await Product.find({ isActive: true })
-      .populate({
-        path: 'categoryIds',
-        model: Category,
-        select: 'title description slug'
-      })
       .sort({ createdAt: -1 });
 
     const productsWithCategories = products.map(product => ({
@@ -25,12 +20,6 @@ export async function GET() {
       productFiles: product.productFiles,
       isFeatured: product.isFeatured,
       isActive: product.isActive,
-      categories: product.categoryIds.map((category: any) => ({
-        id: category._id.toString(),
-        title: category.title,
-        slug: category.slug,
-        description: category.description
-      }))
     }));
 
     return NextResponse.json(productsWithCategories);
@@ -46,40 +35,24 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     await connectDB();
-
+    console.log('Connected to database');
     const body = await request.json();
-
     const {
       title,
       description,
       originalPrice,
       discountPrice,
-      categoryIds,
       displayImage,
       productFiles,
       isFeatured,
       isActive,
       isHotDeal
     } = body;
+    console.log('Received product data:', body);
 
-    if (!title || !description || !originalPrice || !categoryIds || !displayImage) {
+    if (!title || !description || !originalPrice  || !displayImage) {
       return NextResponse.json(
         { error: 'Missing required fields' },
-        { status: 400 }
-      );
-    }
-
-    if (categoryIds.length > 8) {
-      return NextResponse.json(
-        { error: 'A product can have maximum 8 categories' },
-        { status: 400 }
-      );
-    }
-
-    const categories = await Category.find({ _id: { $in: categoryIds } });
-    if (categories.length !== categoryIds.length) {
-      return NextResponse.json(
-        { error: 'One or more categories not found' },
         { status: 400 }
       );
     }
@@ -89,7 +62,6 @@ export async function POST(request: NextRequest) {
       description,
       originalPrice,
       discountPrice,
-      categoryIds,
       displayImage,
       productFiles: productFiles || [],
       isFeatured: isFeatured || false,

@@ -26,7 +26,6 @@ interface Product {
   discountPrice?: number;
   isFeatured: boolean;
   isHotDeal?: boolean;
-  categories: ProductCategory[];
 }
 
 interface ProductGridProps {
@@ -129,28 +128,7 @@ export function ProductGrid({
               </Link>
             </h3>
 
-            <div className="flex flex-wrap gap-1 mb-3">
-              {product.categories.slice(0, 2).map((category) => (
-                <Badge
-                  key={category.id}
-                  variant="outline"
-                  className="text-xs hover:bg-purple-50 hover:border-purple-300 transition-colors cursor-pointer"
-                >
-                  <Link href={`/products?category=${category.slug}`}>
-                    {category.title}
-                  </Link>
-                </Badge>
-              ))}
-              {product.categories.length > 2 && (
-                <Badge
-                  variant="outline"
-                  className="text-xs bg-gray-100 hover:bg-gray-200 transition-colors cursor-help"
-                  title={`Also in: ${product.categories.slice(2).map(s => s.title).join(', ')}`}
-                >
-                  +{product.categories.length - 2}
-                </Badge>
-              )}
-            </div>
+           
 
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
@@ -218,28 +196,7 @@ export function ProductGrid({
                       {product.description}
                     </p>
 
-                    <div className="flex flex-wrap gap-1 mb-3">
-                      {product.categories.slice(0, 3).map((category) => (
-                        <Badge
-                          key={category.id}
-                          variant="outline"
-                          className="text-xs hover:bg-purple-50 hover:border-purple-300 transition-colors cursor-pointer"
-                        >
-                          <Link href={`/products?category=${category.slug}`}>
-                            {category.title}
-                          </Link>
-                        </Badge>
-                      ))}
-                      {product.categories.length > 3 && (
-                        <Badge
-                          variant="outline"
-                          className="text-xs bg-gray-100 hover:bg-gray-200 transition-colors cursor-help"
-                          title={`Also in: ${product.categories.slice(3).map(s => s.title).join(', ')}`}
-                        >
-                          +{product.categories.length - 3}
-                        </Badge>
-                      )}
-                    </div>
+                   
                   </div>
 
                   <div className="text-right ml-4">

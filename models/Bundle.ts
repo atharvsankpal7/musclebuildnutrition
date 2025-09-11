@@ -4,7 +4,7 @@ export interface IBundle extends Document {
   name: string;
   description: string;
   products: mongoose.Types.ObjectId[];
-  sectionIds: mongoose.Types.ObjectId[];
+  categoryIds: mongoose.Types.ObjectId[];
   originalPrice: number;
   discountPrice?: number;
   displayImage: string;
@@ -28,7 +28,7 @@ const BundleSchema = new Schema<IBundle>({
     ref: 'Product',
     required: true,
   }],
-  sectionIds: [{
+  categoryIds: [{
     type: Schema.Types.ObjectId,
     ref: 'Section',
     required: true,
