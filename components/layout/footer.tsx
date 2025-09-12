@@ -51,12 +51,6 @@ export function Footer() {
                   Musclebuildnutrition55@gmail.com
                 </a>
               </li>
-              <li className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-red-600" />
-                <a href="tel:9657866181" className="hover:text-gray-800">
-                  9657866181
-                </a>
-              </li>
             </ul>
           </div>
         </div>

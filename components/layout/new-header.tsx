@@ -89,15 +89,7 @@ export function NewHeader({ navigationSections = [], headerData }: NewHeaderProp
           {/* Right Side - Contact Number (Desktop) & Mobile Menu Button */}
           <div className="flex items-center gap-2 sm:gap-4">
             {/* Contact Number - Hidden on mobile */}
-            <div className="hidden lg:flex items-center">
-              <a
-                href={`tel:${headerData?.phone?.replace(/\s/g, '') || ''}`}
-                className="flex items-center text-red-600 hover:text-red-700 transition-colors duration-300 font-medium"
-              >
-                <Phone className="h-4 w-4 mr-2" />
-                <span className="text-sm">{headerData?.phone || 'Contact'}</span>
-              </a>
-            </div>
+            
 
             {/* Mobile Menu Button */}
             <button
@@ -117,7 +109,7 @@ export function NewHeader({ navigationSections = [], headerData }: NewHeaderProp
                 { href: '/', label: 'Home' },
                 { href: '/products', label: 'Product' },
                 { href: '/about', label: 'About' },
-                { href: '/contact', label: 'Contact' },
+                // { href: '/contact', label: 'Contact' },
               ].map((link) => {
                 const isActive = isActivePage(link.href);
                 return (
@@ -193,16 +185,7 @@ export function NewHeader({ navigationSections = [], headerData }: NewHeaderProp
                   );
                 })}
 
-                {/* Mobile Contact */}
-                <div className="pt-3 border-t border-gray-200">
-                  <a
-                    href={`tel:${headerData?.phone?.replace(/\s/g, '') || ''}`}
-                    className="flex items-center space-x-3 py-3 px-4 rounded-lg text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors duration-300 font-medium"
-                  >
-                    <Phone className="h-4 w-4" />
-                    <span>{headerData?.phone || 'Contact'}</span>
-                  </a>
-                </div>
+               
               </div>
             </motion.div>
           )}
