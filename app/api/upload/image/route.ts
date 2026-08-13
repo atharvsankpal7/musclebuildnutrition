@@ -46,7 +46,6 @@ export async function POST(request: NextRequest) {
         {
           resource_type: 'image',
           folder: 'hero-slides', // Organize uploads in folders
-          upload_preset: 'jyzwho7h', 
           transformation: [
             { quality: 'auto' }, // Automatic quality optimization
             { fetch_format: 'auto' }, // Automatic format optimization

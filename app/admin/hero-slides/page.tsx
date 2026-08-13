@@ -359,7 +359,6 @@ export default function HeroSlidesAdmin() {
                     label="Hero Slide Image"
                     placeholder="Enter image URL or upload a file"
                     required
-                    useApiEndpoint={true}
                   />
 
                   <div className="space-y-2">

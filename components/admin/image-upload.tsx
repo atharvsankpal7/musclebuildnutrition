@@ -17,7 +17,6 @@ interface ImageUploadProps {
   label?: string
   placeholder?: string
   required?: boolean
-  useApiEndpoint?: boolean // Option to use API endpoint instead of direct Cloudinary
 }
 
 export function ImageUpload({ 
@@ -25,8 +24,7 @@ export function ImageUpload({
   onChange, 
   label = "Image", 
   placeholder = "Enter image URL or upload a file",
-  required = false,
-  useApiEndpoint = false
+  required = false
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
@@ -50,34 +48,17 @@ export function ImageUpload({
     formData.append("file", file)
 
     try {
-      let response;
-      
-      if (useApiEndpoint) {
-        // Use our API endpoint
-        response = await fetch("/api/upload/image", {
-          method: "POST",
-          body: formData,
-        })
-      } else {
-        // Use direct Cloudinary upload
-        formData.append("upload_preset", "kwf4nlm7") // You may need to create this preset in Cloudinary
-        response = await fetch(
-          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        )
-      }
+      const response = await fetch("/api/upload/image", {
+        method: "POST",
+        body: formData,
+      })
 
       if (!response.ok) {
         throw new Error("Upload failed")
       }
 
       const data = await response.json()
-      
-      // Handle different response formats
-      const imageUrl = useApiEndpoint ? data.url : data.secure_url
+      const imageUrl = data.url
       
       onChange(imageUrl)
       setUrlInput(imageUrl)

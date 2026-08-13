@@ -100,19 +100,19 @@ export default function AdminProducts() {
     setUploading(true);
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "kwf4nlm7");
 
     try {
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch("/api/upload/image", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Image upload failed");
+      }
 
       const data = await response.json();
-      setFormData((prev) => ({ ...prev, displayImage: data.secure_url }));
+      setFormData((prev) => ({ ...prev, displayImage: data.url }));
       toast.success("Display image uploaded successfully");
     } catch (error: any) {
       toast.error("Failed to upload display image");

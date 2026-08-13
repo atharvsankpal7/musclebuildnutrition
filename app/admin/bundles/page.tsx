@@ -114,19 +114,19 @@ export default function AdminBundles() {
     setUploading(true);
     const formDataUpload = new FormData();
     formDataUpload.append("file", file);
-    formDataUpload.append("upload_preset", "kwf4nlm7"); // Replace with your actual upload preset
 
     try {
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`,
-        {
-          method: "POST",
-          body: formDataUpload,
-        }
-      );
+      const response = await fetch("/api/upload/image", {
+        method: "POST",
+        body: formDataUpload,
+      });
+
+      if (!response.ok) {
+        throw new Error("Image upload failed");
+      }
 
       const data = await response.json();
-      setFormData((prev) => ({ ...prev, displayImage: data.secure_url }));
+      setFormData((prev) => ({ ...prev, displayImage: data.url }));
       toast.success("Display image uploaded successfully");
     } catch (error : any) {
       console.error("Cloudinary upload error:", error);
